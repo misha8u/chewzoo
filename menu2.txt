@@ -1,0 +1,21 @@
+      <Menu mode="horizontal" theme="dark" selectedKeys ="home" style={ MenuStyle }>
+        <Menu_Home key="home"><Link href="/"><a>cHEWzOO</a></Link></Menu_Home>
+        <SubMenu key="controllers" icon={<MenuOutlined />} style={{ float: 'right' }}>
+          <Menu_Controllers key="tagFinder">
+            <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
+          </Menu_Controllers>
+          <Menu_Controllers key="filter">태그 필터</Menu_Controllers>
+          <Menu_Controllers key="wiki">주식 위키</Menu_Controllers>
+        </SubMenu>
+          {me
+            ? <Menu.Item icon={<UserOutlined />} style={{ float: 'right' }} onClick={onUserForm}></Menu.Item>
+            : <Menu.Item icon={<LoginOutlined />} style={{ float: 'right' }} onClick={onUserForm}></Menu.Item>
+          }
+      </Menu>
+
+
+<Menu_Controllers key="tagFinder">
+  <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
+</Menu_Controllers> 
+<Menu_Controllers key="filter">태그 필터</Menu_Controllers>
+<Menu_Controllers key="wiki">주식 위키</Menu_Controllers>
