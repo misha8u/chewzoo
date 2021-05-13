@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { List, Button, Card } from 'antd';
-import { StopOutlined } from '@ant-design/icons';
+import Router from 'next/router'; 
+
+import { List } from 'antd';
+import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 
+import ChewzooAvatar from '../components/ChewzooAvatar';
 import { UNFOLLOW_REQUEST, REMOVE_FOLLOWER_REQUEST } from '../reducers/user';
 
 const FollowList = ({ header, data, onClickMore, loading }) => {
   const dispatch = useDispatch();
   const onCancel = (id) => () => {
-    if (header === '팔로잉') {
+    if (header === '주는 관심') {
       dispatch({
         type: UNFOLLOW_REQUEST,
         data: id,
@@ -21,20 +24,47 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
     });
   };
 
+  const onUserSpeech = useCallback((userId) => () => {
+    Router.push(`/user/${userId}`); 
+  }, []);
+
+  const [followHover, setFollowHover] = useState(null);
+  const mouseEnter = useCallback((e) => () => {
+    setFollowHover(e); 
+  }, [followHover]);
+  const mouseLeave = () => setFollowHover(null);
+
+  const FollowWrapperStyle = {
+    width: '100%',
+    padding: '0px',
+    margin: '5px 0px 5px 0px',
+  }
+
+  const SelectedFollowWrapperStyle = {
+    width: '100%',
+    backgroundColor: '#FEF3F0',
+    padding: '0px',
+    margin: '5px 0px 5px 0px',
+  }
+
   return (
     <List
-      style={{ marginBottom: 20 }}
-      grid={{ gutter: 4, xs: 2, md: 3 }}
-      size="small"
-      header={<div>{header}</div>}
-      loadMore={<div style={{ textAlign: 'center', margin: '10px 0' }}><Button onClick={onClickMore} loading={loading}>더 보기</Button></div>}
-      bordered
+      itemLayout="horizontal"
+      loadMore={<div style={{ textAlign: 'center', margin: '10px 0' }}><SyncOutlined style={{ color: '#E13427' }} onClick={onClickMore} loading={loading} /></div>}
       dataSource={data}
       renderItem={(item) => (
-        <List.Item style={{ marginTop: 20 }}>
-          <Card actions={[<StopOutlined key="stop" onClick={onCancel(item.id)} />]}>
-            <Card.Meta description={item.nickname} />
-          </Card>
+        <List.Item 
+          style={followHover === item.id ? SelectedFollowWrapperStyle : FollowWrapperStyle}
+          onMouseEnter={mouseEnter(item.id)}
+          onMouseLeave={mouseLeave}
+        >
+          <div style={{ marginRight: '5px'}}>
+            <ChewzooAvatar userId={item.id} userAvatar={item.avatar} avatarPosition={'comment'}/>
+          </div>
+          <List.Item.Meta 
+            title={<a onClick={ onUserSpeech(item.id) }>{item.nickname}</a>}
+          />
+          <CloseOutlined key="stop" onClick={onCancel(item.id)} />
         </List.Item>
       )}
     />

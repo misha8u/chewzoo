@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Card } from 'antd';
+import { Col, Empty, Button } from 'antd';
 import { END } from 'redux-saga';
+
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import axios from 'axios';
-import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
+import { LOAD_USER_POSTS_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
 import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
-import PostCard from '../../components/PostCard';
+import PostCard from '../../components/post/PostCard';
 import wrapper from '../../store/configureStore';
 import AppLayout from '../../components/AppLayout';
 
@@ -16,12 +18,29 @@ const User = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
-  const { mainPosts, hasMorePosts, loadUserPostsLoading } = useSelector((state) => state.post);
+  const { mainPosts, hasMorePosts, loadUserPostsLoading,
+    branchDone, addPostDone, focusCardDone, focusCard } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
+  const postDiv = useRef();
+
+  useEffect(() => {
+    if (branchDone || addPostDone) {
+      postDiv.current.scrollTo(0, 0)
+    }
+  }, [branchDone, addPostDone]);
+
+  useEffect(() => {
+    if (focusCardDone) {
+      document.getElementById(focusCard).scrollIntoView(true);
+      dispatch({
+        type: RETURNED_FOCUSCARD,
+      });
+    }
+  }, [focusCardDone]);
 
   useEffect(() => {
     const onScroll = () => {
-      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+      if (postDiv.current.offsetTop + postDiv.current.scrollTop > postDiv.current.scrollHeight  - 800) {  
         if (hasMorePosts && !loadUserPostsLoading) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
@@ -31,56 +50,69 @@ const User = () => {
         }
       }
     };
-    window.addEventListener('scroll', onScroll);
+    {postDiv.current && postDiv.current.addEventListener('scroll', onScroll);}
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      {postDiv.current && postDiv.current.removeEventListener('scroll', onScroll);}
     };
-  }, [mainPosts.length, hasMorePosts, id]);
+  }, [mainPosts, hasMorePosts, id, loadUserPostsLoading]);
+
+  const PostContainerStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 'calc(100vh - 94.6px)',
+  }
+
+  const PostContainerCenterStyle = {
+    flex: '1',
+    background: '#FAFAFA',
+    overflowY: 'auto',
+    webkitScrollbar: {
+      width: '100px',
+    }
+  }
+
+  const PostContainerSideStyle = {
+    //flex: '0.5',
+    //display: 'flex',
+    //justifyContent: 'center',
+    //alignItems: 'center',
+    //background: '#FFFFFF',
+  }
 
   return (
-    <AppLayout>
+    <AppLayout pageType={'userpost'}>
       {userInfo && (
         <Head>
           <title>
-            {userInfo.nickname}
-            님의 글
+            cHEWzOO | {userInfo.nickname}
           </title>
-          <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:image" content="https://nodebird.com/favicon.ico" />
-          <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
         </Head>
       )}
-      {userInfo
-        ? (
-          <Card
-            actions={[
-              <div key="twit">
-                짹짹
-                <br />
-                {userInfo.Posts}
-              </div>,
-              <div key="following">
-                팔로잉
-                <br />
-                {userInfo.Followings}
-              </div>,
-              <div key="follower">
-                팔로워
-                <br />
-                {userInfo.Followers}
-              </div>,
-            ]}
-          >
-            <Card.Meta
-              avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
-              title={userInfo.nickname}
-            />
-          </Card>
-        )
-        : null}
-      {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
+      
+      <div style={ PostContainerStyle }>
+        <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+        </Col>
+        
+        <Col style={ PostContainerCenterStyle } ref={postDiv}>
+          {mainPosts.map((c) => (
+            <PostCard post={c} />  
+          ))}
+          {mainPosts.length === 0 &&
+            <Empty
+              image = "http://localhost:3065/resource/noposts.png"
+              description={
+                <><span style={{ fontWeight: 'bold' }}>{userInfo.nickname}</span><span> 주주님은 <br /> 하신 말씀이 없네..</span></>
+              }
+              style={{ marginTop: '50px'}}
+            >
+              <Link href="/"><Button type="primary">돌아가자!</Button></Link>
+            </Empty>
+          }
+        </Col>
+        
+        <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+        </Col>
+      </div>
     </AppLayout>
   );
 };

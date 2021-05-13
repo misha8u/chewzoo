@@ -22,6 +22,7 @@ module.exports = class Post extends Model {
     db.Post.belongsTo(db.User); // post.addUser, post.getUser, post.setUser
     db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' }); // post.addHashtags
     db.Post.hasMany(db.Comment); // post.addComments, post.getComments
+    db.Post.hasMany(db.Report);
     db.Post.hasMany(db.Image); // post.addImages, post.getImages
     db.Post.belongsToMany(db.User, { through: 'Exclamation', as: 'Exclamationers' }) // post.addExclamationers, post.removeExclamationers
     db.Post.belongsToMany(db.User, { through: 'Question', as: 'Questioners' }) // post.addQuestioners, post.removeQuestioners

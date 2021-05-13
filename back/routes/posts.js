@@ -1,7 +1,7 @@
 const express = require('express');
 const { Op } = require('sequelize');
 
-const { Post, Image, User, Comment } = require('../models');
+const { Post, Image, User, Comment, Report } = require('../models');
 
 const router = express.Router();
 
@@ -16,18 +16,18 @@ router.get('/', async (req, res, next) => { // GET /posts
       limit: 10,
       order: [
         ['createdAt', 'DESC'],
-        [Comment, 'createdAt', 'DESC'],
+        [Comment, 'createdAt', 'ASC'],
       ],
       include: [{
         model: User,
-        attributes: ['id', 'nickname'],
+        attributes: ['id', 'nickname', 'avatar'],
       }, {
         model: Image,
       }, {
         model: Comment,
         include: [{
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }],
       }, {
         model: User, // 신뢰해요 누른 사람
@@ -37,18 +37,23 @@ router.get('/', async (req, res, next) => { // GET /posts
         model: User, // 의심해요 누른 사람
         as: 'Questioners',
         attributes: ['id'],
-      },{
+      }, {
+        model: Report,
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+        }],
+      }, {
         model: Post,
         as: 'Branch',
         include: [{
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }, {
           model: Image,
         }]
       }],
     });
-    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);

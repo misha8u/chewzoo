@@ -1,39 +1,38 @@
 import React, { useCallback } from 'react';
-import { Button } from 'antd';
-import PropTypes from 'prop-types';
+import { message } from 'antd';
+import { StarOutlined, StarFilled } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../reducers/user';
 
-const FollowButton = ({ post }) => {
+const FollowButton = ({ otherUserId }) => {
   const dispatch = useDispatch();
   const { me, followLoading, unfollowLoading } = useSelector((state) => state.user);
-  const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
+  const isFollowing = typeof me.Followings.find((v) => v.id === otherUserId)
+
   const onClickButton = useCallback(() => {
-    if (isFollowing) {
+    if (isFollowing === 'object') {
       dispatch({
         type: UNFOLLOW_REQUEST,
-        data: post.User.id,
+        data: otherUserId,
       });
+      message.warning({content: '관심을 끊음..', style: {marginTop: '3vh'}})
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
-        data: post.User.id,
+        data: otherUserId,
       });
+      message.success({content: '관심 주기 시작!', style: {marginTop: '3vh'}})
     }
-  }, [isFollowing]);
+  }, [isFollowing, otherUserId]);
 
-  if (post.User.id === me.id) {
-    return null;
-  }
   return (
-    <Button loading={followLoading || unfollowLoading} onClick={onClickButton}>
-      {isFollowing ? '언팔로우' : '팔로우'}
-    </Button>
-  );
-};
-
-FollowButton.propTypes = {
-  post: PropTypes.object.isRequired,
+    <>
+      {isFollowing === 'object'
+        ? <StarFilled onClick={ onClickButton } loading={ unfollowLoading }/>
+        : <StarOutlined onClick={ onClickButton } loading={ followLoading }/>
+      }
+    </>
+  )
 };
 
 export default FollowButton;

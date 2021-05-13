@@ -1,39 +1,119 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import { Col, Empty, Button } from 'antd';
+
+import { useDispatch, useSelector } from 'react-redux';
 import Head from 'next/head';
+import Link from 'next/link';
+
 import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import axios from 'axios';
-import { LOAD_POST_REQUEST } from '../../reducers/post';
+import { LOAD_POST_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
 import wrapper from '../../store/configureStore';
-import PostCard from '../../components/PostCard';
+import PostCard from '../../components/post/PostCard';
 import AppLayout from '../../components/AppLayout';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
 
 const Post = () => {
-  const { singlePost } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+  const { singlePost, branchDone, addPostDone, focusCardDone, focusCard } = useSelector((state) => state.post);
   const router = useRouter();
+  const postDiv = useRef();
   const { id } = router.query;
 
-  // if (router.isFallback) {
-  //   return <div>Loading...</div>
-  // }
+  useEffect(() => {
+    if (branchDone || addPostDone) {
+      postDiv.current.scrollTo(0, 0)
+    }
+  }, [branchDone, addPostDone]);
+
+  useEffect(() => {
+    if (focusCardDone) {
+      document.getElementById(focusCard).scrollIntoView(true);
+      dispatch({
+        type: RETURNED_FOCUSCARD,
+      });
+    }
+  }, [focusCardDone]);
+
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
+  
+  const PostContainerStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 'calc(100vh - 94.6px)',
+  }
+
+  const PostContainerCenterStyle = {
+    flex: '1',
+    background: '#FAFAFA',
+    overflowY: 'auto',
+    webkitScrollbar: {
+      width: '100px',
+    }
+  }
+
+  const PostContainerSideStyle = {
+    //flex: '0.5',
+    //display: 'flex',
+    //justifyContent: 'center',
+    //alignItems: 'center',
+    //background: '#FFFFFF',
+  }
 
   return (
-    <AppLayout>
-      <Head>
-        <title>
-          {singlePost.User.nickname}
-          님의 글
-        </title>
-        <meta name="description" content={singlePost.content} />
-        <meta property="og:title" content={`${singlePost.User.nickname}님의 게시글`} />
-        <meta property="og:description" content={singlePost.content} />
-        <meta property="og:image" content={singlePost.Images[0] ? singlePost.Images[0].src : 'https://nodebird.com/favicon.ico'} />
-        <meta property="og:url" content={`https://nodebird.com/post/${id}`} />
-      </Head>
-      <PostCard post={singlePost} />
+    <AppLayout pageType={'singlepost'}>
+      {singlePost
+        ? <>
+            <Head>
+              <title>
+                cHEWzOO | {singlePost.User.nickname}
+              </title>
+            </Head>
+
+            <div style={ PostContainerStyle }>
+              <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+              </Col>
+
+              <Col style={ PostContainerCenterStyle } ref={postDiv}>
+                <PostCard post={singlePost} />
+              </Col>
+
+              <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+              </Col>
+            </div>
+          </>
+        : <>
+            <Head>
+              <title>
+                cHEWzOO | 여기는 어디?
+              </title>
+            </Head>
+
+            <div style={ PostContainerStyle }>
+              <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+              </Col>
+
+              <Col style={ PostContainerCenterStyle } ref={postDiv}>
+                <Empty
+                  image = "http://localhost:3065/resource/searching.png"
+                  description={
+                    <span>없는 걸 찾으려 하지마!</span>
+                  }
+                  style={{ marginTop: '50px'}}
+                >
+                  <Link href="/"><Button type="primary">아.. 미안</Button></Link>
+                </Empty>
+              </Col>
+
+              <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+              </Col>
+            </div>
+          </>
+      }
     </AppLayout>
   );
 };

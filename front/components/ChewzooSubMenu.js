@@ -1,13 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import Media from 'react-media';
 import Router from 'next/router';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { CLOSE_CHEWZOO_SUBMENU } from '../reducers/user';
 
-import { Input, Menu, Drawer } from 'antd';
+import { Input, Menu, Drawer, message } from 'antd';
 import Link from 'next/link';
 import SubMenu from 'antd/lib/menu/SubMenu';
+import useInput from '../hooks/useInput';
 
 const ChewzooSubMenu = () => {
   const dispatch = useDispatch();
@@ -20,8 +21,16 @@ const ChewzooSubMenu = () => {
     });
   },[]);
 
+  const onProgress = useCallback(() => {
+    message.warning({content: '아직 준비 중..!', style: {marginTop: '3vh'}})
+  },[]);
+
   const onSearch = useCallback(() => {
-    Router.push(`/hashtag/${searchInput}`);
+    if (searchInput) {
+      Router.push(`/hashtag/${searchInput}`);  
+    } else {
+      message.error({content: '검색어를 입력해줘!', style: {marginTop: '3vh'}})
+    }
   }, [searchInput]);
 
   const ChewzooMenuStyle = {
@@ -35,7 +44,7 @@ const ChewzooSubMenu = () => {
   return (
     <>
       <Drawer
-        title="지수/환율 rotation"
+        title="ver. alpha 1.0.1"
         placement="right"
         closable={false}
         onClose={onClose}
@@ -54,10 +63,7 @@ const ChewzooSubMenu = () => {
           }
         </Media>
         <Menu mode="inline">
-          <Menu.Item key="diary" style={ChewzooMenuStyle}>
-            주식일기
-          </Menu.Item>
-
+          {/* 
           <SubMenu key="favorite" style={ChewzooMenuStyle}
             title="관심종목"
           >
@@ -67,24 +73,27 @@ const ChewzooSubMenu = () => {
             <Menu.Item style={MyfavoriteStyle}>관심 종목 설정</Menu.Item>
           
           </SubMenu>
+          */}
 
           <Menu.Item key="wiki" style={ChewzooMenuStyle}>
-            <Link href="/wiki">
-              <a onClick={onClose}>주식위키</a>
-            </Link>
+              <a onClick={onProgress}>주식위키</a>
           </Menu.Item>
 
           <Menu.Item key="debate" style={ChewzooMenuStyle}>
-            <Link href="/debate">
-              <a onClick={onClose}>주식토론</a>
-            </Link>
+              <a onClick={onProgress}>주식토론</a>
           </Menu.Item>
 
           <Menu.Item style={ChewzooMenuStyle}>
-            <Link href="/devnote">
-              <a onClick={onClose}>개발노트</a>
-            </Link>
+              <Link href={"https://open.kakao.com/me/chewzoo"}>
+              <a>문의하기</a>
+              </Link>
           </Menu.Item>
+
+          {/*
+          <Menu.Item style={ChewzooMenuStyle}>
+              <a onClick={onProgress}>개발노트</a>
+          </Menu.Item>
+          */}
 
         </Menu>
       </Drawer>

@@ -1,31 +1,63 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { SHOW_USER_FORM } from '../reducers/user';
 
-const ChewzooAvatar = ({ userId, avatarPosition }) => {
+const ChewzooAvatar = ({ userId, userAvatar, avatarPosition, disabledClick }) => {
+  const dispatch = useDispatch();
+  const { me } = useSelector((state) => state.user);
+
+  const onUserForm = useCallback(() => {
+    if (!disabledClick) {
+      if (me) {
+        if (me.id === userId) {
+          const formType = String('my')
+          return dispatch({
+            type: SHOW_USER_FORM,
+            data: { formType }
+          });
+        } else {
+          const formType = String('other')
+          return dispatch({
+            type: SHOW_USER_FORM,
+            data: { formType, userId }
+          });
+        }
+      } else {
+        const formType = String('login')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType }
+        });
+      }
+    }
+  },[me, userId]);
+
   const commentAvatarStyle ={
     width: '30px',
-    margin: '0px 5px 5px 0px',
+    height: '30px',
     border: '1px solid #F0F0F0',
     borderRadius: '15%',
   };
 
   const postAvatarStyle ={
     width: '40px',
-    margin: '0px 5px 5px 0px',
+    height: '40px',
     border: '1px solid #F0F0F0',
     borderRadius: '15%',
   };
 
   return (
-    <Link href={`/user/${userId}`}>
-      <a><img style={
-        avatarPosition === 'comment'
-          ? commentAvatarStyle
-          : postAvatarStyle
-        }
-        src="http://localhost:3065/avatars/ava4.png"/>
-      </a>
-    </Link>
+    <>
+      <img
+        onClick={ onUserForm }
+        src={`http://localhost:3065/${userAvatar}`}
+        style={avatarPosition === 'comment'
+            ? commentAvatarStyle
+            : postAvatarStyle
+          }
+          
+      />
+    </>
   )
 };
 

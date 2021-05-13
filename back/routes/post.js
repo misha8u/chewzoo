@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Image, Comment, User, Hashtag } = require('../models');
+const { Post, Image, Comment, Report, User, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -11,7 +11,6 @@ const router = express.Router();
 try {
   fs.accessSync('uploads');
 } catch (error) {
-  console.log('uploads 폴더가 없으므로 생성합니다.');
   fs.mkdirSync('uploads');
 }
 
@@ -59,11 +58,11 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
         model: Comment,
         include: [{
           model: User, // 댓글 작성자
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }],
       }, {
         model: User, // 게시글 작성자
-        attributes: ['id', 'nickname'],
+        attributes: ['id', 'nickname', 'avatar'],
       }, {
         model: User, // 신뢰해요 누른 사람
         as: 'Exclamationers',
@@ -72,6 +71,12 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
         model: User, // 의심해요 누른 사람
         as: 'Questioners',
         attributes: ['id'],
+      }, {
+        model: Report,
+        include: [{
+          model: User, // 신고자
+          attributes: ['id', 'nickname'],
+        }],
       }]
     })
     res.status(201).json(fullPost);
@@ -92,14 +97,14 @@ router.get('/:postId', async (req, res, next) => {
       where: { id: req.params.postId },
       include: [{
         model: User,
-        attributes: ['id', 'nickname'],
+        attributes: ['id', 'nickname', 'avatar'],
       }, {
         model: Image,
       }, {
         model: Comment,
         include: [{
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
           order: [['createdAt', 'DESC']],
         }],
       }, {
@@ -110,6 +115,12 @@ router.get('/:postId', async (req, res, next) => {
         model: User, // 의심해요 누른 사람
         as: 'Questioners',
         attributes: ['id'],
+      }, {
+        model: Report,
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+        }],
       }],
     });
     res.status(200).json(post);
@@ -129,7 +140,7 @@ router.post('/:postId/branch', isLoggedIn, upload.none(), async (req, res, next)
       }],
     });
     if (!post) {
-      return res.status(403).send('존재하지 않는 게시글입니다.');
+      return res.status(403).send('뭘 하자는지 모르겠어..');
     }
     const branch = await Post.create({
       UserId: req.user.id,
@@ -161,13 +172,19 @@ router.post('/:postId/branch', isLoggedIn, upload.none(), async (req, res, next)
         as: 'Branch',
         include: [{
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }, {
           model: Image,
         }]
       }, {
         model: User,
-        attributes: ['id', 'nickname'],
+        attributes: ['id', 'nickname', 'avatar'],
+      }, {
+        model: Report,
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+        }],
       }, {
         model: User, // 신뢰해요 누른 사람
         as: 'Exclamationers',
@@ -182,7 +199,7 @@ router.post('/:postId/branch', isLoggedIn, upload.none(), async (req, res, next)
         model: Comment,
         include: [{
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }],
       }],
     })
@@ -197,7 +214,7 @@ router.patch('/:postId/exclamation', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId }});
     if (!post) {
-      return res.status(403).send('게시글이 존재하지 않습니다.');
+      return res.status(403).send('뭘 하자는지 모르겠어..');
     }
     await post.addExclamationers(req.user.id);
     res.json({ PostId: post.id, UserId: req.user.id });
@@ -211,7 +228,7 @@ router.delete('/:postId/exclamation', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId }});
     if (!post) {
-      return res.status(403).send('게시글이 존재하지 않습니다.');
+      return res.status(403).send('뭘 하자는지 모르겠어..');
     }
     await post.removeExclamationers(req.user.id);
     res.json({ PostId: post.id, UserId: req.user.id });
@@ -225,7 +242,7 @@ router.patch('/:postId/question', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId }});
     if (!post) {
-      return res.status(403).send('게시글이 존재하지 않습니다.');
+      return res.status(403).send('뭘 하자는지 모르겠어..');
     }
     await post.addQuestioners(req.user.id);
     res.json({ PostId: post.id, UserId: req.user.id });
@@ -239,7 +256,7 @@ router.delete('/:postId/question', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId }});
     if (!post) {
-      return res.status(403).send('게시글이 존재하지 않습니다.');
+      return res.status(403).send('');
     }
     await post.removeQuestioners(req.user.id);
     res.json({ PostId: post.id, UserId: req.user.id });
@@ -264,13 +281,50 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.post('/:postId/report', isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(403).send('뭘 하자는지 모르겠어..');
+    }
+    const exReport = await Report.findOne({
+      where: {
+        PostId: parseInt(req.params.postId, 10),
+        UserId: req.user.id,
+      }
+    });
+    if (exReport) {
+      return res.status(403).send('이미 신고했어.');
+    }
+    const report = await Report.create({
+      content: req.body.content,
+      target: req.body.target,
+      PostId: parseInt(req.params.postId, 10),
+      UserId: req.user.id,
+    })
+    const fullReport = await Report.findOne({
+      where: { id: report.id },
+      include: [{
+        model: User,
+        attributes: ['id', 'nickname'],
+      }],
+    })
+    res.status(201).json(fullReport);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({
       where: { id: req.params.postId },
     });
     if (!post) {
-      return res.status(403).send('존재하지 않는 게시글입니다.');
+      return res.status(403).send('댓글을 어디 달려고?');
     }
     const comment = await Comment.create({
       content: req.body.content,
@@ -281,7 +335,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
       where: { id: comment.id },
       include: [{
         model: User,
-        attributes: ['id', 'nickname'],
+        attributes: ['id', 'nickname', 'avatar'],
       }],
     })
     res.status(201).json(fullComment);
@@ -300,7 +354,7 @@ router.delete('/comment/:commentId', isLoggedIn, async (req, res, next) => {
       },
     });
     if (!comment) {
-      res.status(403).send('존재하지 않는 댓글입니다.');
+      res.status(403).send('무슨 댓글을 지우려고?');
     }
     await comment.destroy({ id: req.params.commentId });
     res.status(200).json({ CommentId: comment.id, PostId: comment.PostId });

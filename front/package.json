@@ -1,19 +1,20 @@
 {
   "name": "chewzoo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "next -p 3060",
-    "build": "next build",
-    "start": "next start"
+    "build": "cross-env ANALYZE=true NODE_ENV=production next build",
+    "start": "cross-env NODE_ENV=production next start -p 3060"
   },
   "author": "misha",
   "license": "MIT",
   "dependencies": {
     "@ant-design/icons": "^4.4.0",
-    "@next/bundle-analyzer": "^10.0.9",
+    "@next/bundle-analyzer": "^10.2.0",
     "@zeit/next-less": "^1.0.1",
+    "@zeit/next-sass": "^1.0.1",
     "antd": "^4.10.3",
     "axios": "^0.21.1",
     "babel-plugin-import": "^1.13.3",
@@ -37,6 +38,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.1.3",
+    "sass": "^1.32.13",
     "shortid": "^2.2.16",
     "styled-components": "^5.2.1",
     "swr": "^0.5.4"

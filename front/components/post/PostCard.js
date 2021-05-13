@@ -1,69 +1,53 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import { Card, Col } from 'antd';
-import moment from 'moment';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 
 import PostCardAuthor from './PostCardAuthor';
 import PostCardContent from './PostCardContent';
-import BranchPostCardContent from './BranchPostCardContent';
+import BranchPostContent from './BranchPostContent';
 import PostCardActionButtons from './PostCardActionButtons';
 
-moment.locale('ko');
-
 const PostCard = ({ post }) => {
-  const [cardHover, setCardHover] = useState(false);
-  const mouseEnter = () => setCardHover(true)
-  const mouseLeave = () => setCardHover(false)
-
-  const CardStyle = {
-    padding: '15px 1% 5px 1%',
-  };
-
-  const CardBodyStyle = {
-    padding: '0.8px',
-  };
+  const toOrigin = useCallback(() => {
+    Router.push(`/post/${post.BranchId}`);  
+  }, [post.BranchId]);
 
   const authorStyle = {
     width: '100%',
-    padding: '16px 1% 16px 24px',
+    padding: '1.5%',
     fontWeight: 'bold',
     color: '#262626',
   };
 
   const PostCardContentStyle = {
     width: '100%',
-    padding: '16px 24px 16px 24px',
+    padding: '1.5%',
   };
 
-  const BranchPostCardContentStyle = {
+  const BranchPostContentStyle = {
     width: '100%',
-    padding: '16px 24px 16px 24px',
+    padding: '1.5%',
     fontStyle: 'italic',
     color: '#ababab',
+    cursor: 'pointer',
   };
 
   return (
-    <div key={post.id} id={post.id} style={ CardStyle }>
-      <Card
-        hoverable
-        onMouseEnter={mouseEnter}
-        onMouseLeave={mouseLeave}
-        bodyStyle={ CardBodyStyle }
-        style={{ shadowColor: '#E13427' }}
-      >
+    <div key={post.id} id={post.id} style={{ padding: '15px 1% 5px 1%' }}>
+      <Card hoverable bodyStyle={{ padding: '0.8px' }}>
         <Col style={{ padding: '0%', alignContent: 'center' }}>
           <div style={ authorStyle }>
-            <PostCardAuthor post={post} cardhover={cardHover} />
+            <PostCardAuthor post={post}/>
           </div>
           {post.BranchId && post.Branch &&
-            <div style={ BranchPostCardContentStyle }>
-              <BranchPostCardContent postData={post.Branch.content}/>
+            <div style={ BranchPostContentStyle } onClick={ toOrigin }>
+              <BranchPostContent postData={post.Branch.content}/>
             </div>
           }
           <div style={ PostCardContentStyle }>
             <PostCardContent postData={post.content} postId={post.id}/>
           </div>
-          <span style={{ float: 'right' }}>{moment(post.createdAt).fromNow()}</span>
         </Col>
 
         <PostCardActionButtons post={post}/>
@@ -76,7 +60,10 @@ const PostCard = ({ post }) => {
 PostCard.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number,
-    User: PropTypes.object,
+    User: PropTypes.shape({
+      nickname: PropTypes.string,
+      avatar: PropTypes.string,
+    }).isRequired,
     UserId: PropTypes.number,
     content: PropTypes.string,
     createdAt: PropTypes.string,

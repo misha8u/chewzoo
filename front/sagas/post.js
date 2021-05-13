@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { all, delay, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
 
 import {
   ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS,
@@ -10,6 +10,7 @@ import {
   LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE,
   LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE,
   REMOVE_POST_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS,
+  REPORT_POST_FAILURE, REPORT_POST_REQUEST, REPORT_POST_SUCCESS,
   ON_EXCLAMATION_REQUEST, ON_EXCLAMATION_SUCCESS, ON_EXCLAMATION_FAILURE,
   OFF_EXCLAMATION_REQUEST, OFF_EXCLAMATION_SUCCESS, OFF_EXCLAMATION_FAILURE,
   ON_QUESTION_REQUEST, ON_QUESTION_SUCCESS, ON_QUESTION_FAILURE,
@@ -152,6 +153,7 @@ function loadPostsAPI(lastId) {
 function* loadPosts(action) {
   try {
     const result = yield call(loadPostsAPI, action.lastId);
+    console.log('불러옴', action.lastId)
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data,
@@ -206,7 +208,7 @@ function* loadHashtagPosts(action) {
 }
 
 function addPostAPI(data) {
-  console.log(data);
+  console.log(data, '문장 추가 합니당.');
   return axios.post('/post', data);
 }
 
@@ -249,6 +251,28 @@ function* removePost(action) {
     console.error(err);
     yield put({
       type: REMOVE_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function reportAPI(data) {
+  return axios.post(`/post/${data.postId}/report`, data);
+}
+
+function* report(action) {
+  try {
+    const result = yield call(reportAPI, action.data);
+    yield put({
+      type: REPORT_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    const reportedPostId = action.data.postId
+    yield put({
+      type: REPORT_POST_FAILURE,
+      data: reportedPostId,
       error: err.response.data,
     });
   }
@@ -348,7 +372,7 @@ function* watchOffQuestion() {
 }
 
 function* watchLoadPosts() {
-  yield throttle(2000, LOAD_POSTS_REQUEST, loadPosts);
+  yield throttle(3000, LOAD_POSTS_REQUEST, loadPosts);
 }
 
 function* watchLoadPost() {
@@ -371,6 +395,10 @@ function* watchRemoveComment() {
   yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
+function* watchReport() {
+  yield takeLatest(REPORT_POST_REQUEST, report);
+}
+
 function* watchUploadImages() {
   yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
@@ -380,11 +408,11 @@ function* watchReturnFocusCard() {
 }
 
 function* watchLoadUserPosts() {
-  yield throttle(5000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
+  yield throttle(3000, LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 
 function* watchLoadHashtagPosts() {
-  yield throttle(5000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+  yield throttle(3000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 
 export default function* postSaga() {
@@ -401,6 +429,7 @@ export default function* postSaga() {
     fork(watchLoadHashtagPosts),
     fork(watchUploadImages),
     fork(watchRemovePost),
+    fork(watchReport),
     fork(watchAddComment),
     fork(watchRemoveComment),
     fork(watchReturnFocusCard),

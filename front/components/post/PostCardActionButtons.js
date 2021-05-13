@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 
-import { Col, Comment, List, Row, Avatar, Divider, Badge } from 'antd';
+import { Col, List, Row, Divider, Badge, Modal } from 'antd';
 import { QuestionCircleTwoTone, QuestionCircleOutlined, 
   ExclamationCircleTwoTone, ExclamationCircleOutlined, 
   MessageOutlined, MessageFilled, BranchesOutlined,
-  FileImageOutlined, FileImageFilled, CloseOutlined, AlertOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
+  FileImageOutlined, FileImageFilled, DeleteOutlined, AlertOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { SHOW_USER_FORM, SHOW_BRANCH_POSTFORM } from '../../reducers/user';
@@ -15,19 +15,21 @@ import { ON_EXCLAMATION_REQUEST, OFF_EXCLAMATION_REQUEST,
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import ChewzooAvatar from '../ChewzooAvatar';
+import moment from 'moment';
+
+moment.locale('ko');
 
 const PostCardActionButtons = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [ImageFormOpened, setImageFormOpened] = useState(true);
   const dispatch = useDispatch();
+  const { removeCommentError } = useSelector((state) => state.post);
   const id = useSelector((state) => state.user.me?.id);
 
   const [commentHover, setCommentHover] = useState(null);
   const mouseEnter = useCallback((e) => () => {
-    if (id) {
-        setCommentHover(e); 
-      }
-  }, [id, commentHover]);
+    setCommentHover(e); 
+  }, [commentHover]);
   const mouseLeave = () => setCommentHover(null);
 
   const onToggleComment = useCallback(() => {
@@ -40,9 +42,11 @@ const PostCardActionButtons = ({ post }) => {
 
   const onToggleExclamation = useCallback(() => {
     if (!id) {
-      return dispatch({
-        type: SHOW_USER_FORM,
-      });
+      const formType = String('login')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType }
+        });
     }
       return dispatch({
         type: ON_EXCLAMATION_REQUEST,
@@ -52,9 +56,11 @@ const PostCardActionButtons = ({ post }) => {
 
   const offToggleExclamation = useCallback(() => {
     if (!id) {
-      return dispatch({
-        type: SHOW_USER_FORM,
-      });
+      const formType = String('login')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType }
+        });
     }
       return dispatch({
         type: OFF_EXCLAMATION_REQUEST,
@@ -65,9 +71,11 @@ const PostCardActionButtons = ({ post }) => {
 
    const onToggleQuestion = useCallback(() => {
     if (!id) {
-      dispatch({
-        type: SHOW_USER_FORM,
-      });
+      const formType = String('login')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType }
+        });
     }
       return dispatch({
         type: ON_QUESTION_REQUEST,
@@ -77,9 +85,11 @@ const PostCardActionButtons = ({ post }) => {
 
   const offToggleQuestion = useCallback(() => {
     if (!id) {
-      dispatch({
-        type: SHOW_USER_FORM,
-      });
+      const formType = String('login')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType }
+        });
     }
       return dispatch({
         type: OFF_QUESTION_REQUEST,
@@ -90,8 +100,10 @@ const PostCardActionButtons = ({ post }) => {
 
   const onBranchPostForm = useCallback(() => {
     if (!id) {
+      const formType = String('login')
       return dispatch({
         type: SHOW_USER_FORM,
+        data: { formType }
       });
     }
       return dispatch({
@@ -100,14 +112,37 @@ const PostCardActionButtons = ({ post }) => {
       });
   }, [id]);
 
+  const { confirm } = Modal;
   const onRemoveComment = useCallback((item) => () => {
-    dispatch({
-        type: REMOVE_COMMENT_REQUEST,
-        data: { commentId: item.id },
-      })
+    confirm({
+      title: '지울래?',
+      icon: <DeleteOutlined />,
+      okText: 'ㅇㅇ',
+      okType: 'danger',
+      cancelText: 'ㄴㄴ',
+      onOk() {
+        dispatch({
+          type: REMOVE_COMMENT_REQUEST,
+          data: { commentId: item.id },
+        });
+      }
+    })
   }, []);
 
-  const CommentList = post.Comments.slice().sort((a, b) => a.id - b.id);
+  //const onRemoveComment = useCallback((item) => () => {
+  //  dispatch({
+  //      type: REMOVE_COMMENT_REQUEST,
+  //      data: { commentId: item.id },
+  //    })
+  //}, []);
+
+  useEffect(() => {
+    if (removeCommentError) {
+      message.error({content: removeCommentError, style: {marginTop: '3vh'}});
+    }
+  }, [removeCommentError])
+
+  const CommentList = post.Comments?.slice().sort((a, b) => a.id - b.id);
 
   const ActionButtonIconStyle = {
     fontSize: '19px',
@@ -120,13 +155,12 @@ const PostCardActionButtons = ({ post }) => {
 
   const rightActionButtonStyle = {
     margin: '16px 5px 16px 5px',
-    fontSize: '19px',
     float: 'right',
   }
 
   const CommentListWrapperStyle = {
     width: '100%',
-    padding: '0% 24px 0% 24px'  
+    padding: '1% 1.5% 1% 1.5%',
   }
 
   const CommentWrapperStyle = {
@@ -144,7 +178,8 @@ const PostCardActionButtons = ({ post }) => {
 
   const CommentStyle = {
     width: 'calc(100% - 47px)',
-    padding: '0px'
+    padding: '0px',
+    marginLeft: '5px',
   };
 
   const CommentAuthorStyle = {
@@ -161,14 +196,6 @@ const PostCardActionButtons = ({ post }) => {
     padding: '0px'
   }
 
-  //const PostImagesStyleChekcer = () => {
-  //  const checker = (post.Images.length === 0)
-  //  return checker 
-  //    ? { width: '100%', padding: '0%' }
-  //    : { width: '100%', padding: '1%' }
-  //};
-  //const [PostImagesStyle] = useState(PostImagesStyleChekcer());
-
   return (
     <div>
       {ImageFormOpened && post.Images.length > 0 && (
@@ -177,7 +204,7 @@ const PostCardActionButtons = ({ post }) => {
         </div>
       )}
 
-      <div style={{ width: '100%', padding: '0% 24px 0% 24px' }}>
+      <div style={{ width: '100%', padding: '0% 1.5% 0% 1.5%' }}>
         <Row>
         <Col xs={12} md={12}>
           {post.Images.length > 0 &&
@@ -199,7 +226,7 @@ const PostCardActionButtons = ({ post }) => {
           {id || post.Comments.length > 0 
             ? <div style={ leftActionButtonStyle } onClick={onToggleComment}>
               <Badge
-                count={post.Comments.length}
+                count={post.Comments?.length}
                 size="small"
                 offset={[1, 20]}
                 style={{ backgroundColor: '#262626', textAlign: 'center' }}
@@ -269,14 +296,21 @@ const PostCardActionButtons = ({ post }) => {
             renderItem={(item) => (
               <List.Item
                 style={commentHover === item.id ? SelectedCommentWrapperStyle : CommentWrapperStyle}
-                onMouseEnter={mouseEnter(item.id)}
-                onMouseLeave={mouseLeave}
+                onMouseEnter={ mouseEnter(item.id) }
+                onMouseLeave={ mouseLeave }
               >
                 <div style={CommentAvatarStyle}>
-                  <ChewzooAvatar userId={item.User.id} avatarPosition={'comment'}/>
+                  <ChewzooAvatar userId={item.User.id} userAvatar={item.User.avatar} avatarPosition={'comment'}/>
                 </div>
                 <div style={ CommentStyle }>
-                  <div style={ CommentAuthorStyle }>{item.User.nickname}</div>
+                  <div style={ CommentAuthorStyle }>
+                    {item.User.nickname}
+                    <span style={{ fontSize: '10px' }}>
+                      &#160;&#40;
+                        {commentHover === item.id ? moment(item.createdAt).format('YYYY-MM-DD, HH:mm:ss') : moment(item.createdAt).fromNow()}
+                      &#41;
+                    </span>
+                  </div>
                   <div>
                     {item.content.split(/(#[^\s#]+)/g).map((v) => {
                       if (v.match(/(#[^\s#]+)/)) {
@@ -298,8 +332,12 @@ const PostCardActionButtons = ({ post }) => {
                 {id
                   ? <>{commentHover === item.id
                       ? <>{item.User.id === id
-                          ? (<CloseOutlined ket="delete" onClick={onRemoveComment(item)} style={{ fontSize: '12px', color: '#E13427' }}/>)
-                          : (<AlertOutlined key="report" style={{ fontSize: '12px', color: '#E13427' }}/>)
+                          ? <>
+                              <DeleteOutlined ket="delete" onClick={onRemoveComment(item)} style={{ fontSize: '12px', color: '#E13427' }}/>
+                            </>
+                          : <> {/* 아이콘 색을 배경과 동일하게 수정해 배활성화 한 상태 */}
+                              <AlertOutlined key="report" style={{ fontSize: '12px', color: '#FEF3F0' }}/>
+                            </>
                         }</>
                       : <div style={{ width: '12px'}}/>
                     }</>

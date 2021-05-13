@@ -1,5 +1,3 @@
-import shortId from 'shortid';
-import faker from 'faker';
 import produce from '../util/produce';
 
 export const initialState = {
@@ -43,6 +41,10 @@ export const initialState = {
   branchLoading: false,
   branchDone: false,
   branchError: null,
+  reportLoading: false,
+  reportDone: false,
+  reportError: null,
+  reportedPost: null,
   focusCardDone: false,
   focusCard: 0,
 };
@@ -113,6 +115,10 @@ export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 
+export const REPORT_POST_REQUEST = 'REPORT_POST_REQUEST';
+export const REPORT_POST_SUCCESS = 'REPORT_POST_SUCCESS';
+export const REPORT_POST_FAILURE = 'REPORT_POST_FAILURE';
+
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
@@ -138,26 +144,6 @@ export const addComment = (data) => ({
   data,
 });
 
-//const dummyPost = (data) => ({
-//  id: data.id,
-//  content: data.content,
-//  User: {
-//    id: 1,
-//    nickname: '미샤샥',
-//  },
-//  Images: [],
-//  Comments: [],
-//});
-
-//const dummyComment = (data) => ({
-//  id: shortId.generate(),
-//  content: data,
-//  User: {
-//    id: 1,
-//    nickname: '미샤샥',
-//  },
-//});
-// 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서)
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
     case BRANCH_REQUEST:
@@ -347,6 +333,23 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_FAILURE:
       draft.addPostLoading = false;
       draft.addPostError = action.error;
+      break;
+    case REPORT_POST_REQUEST:
+      draft.reportLoading = true;
+      draft.reportDone = false;
+      draft.reportError = null;
+      draft.reportedPost = null;
+      break;
+    case REPORT_POST_SUCCESS: {
+      draft.reportLoading = false;
+      draft.reportDone = true;
+      draft.reportedPost = action.data.PostId;
+      break;
+    } 
+    case REPORT_POST_FAILURE:
+      draft.reportLoading = false;
+      draft.reportError = action.error;
+      draft.reportedPost = action.data;
       break;
     case REMOVE_POST_REQUEST:
       draft.removePostLoading = true;

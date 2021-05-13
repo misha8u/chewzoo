@@ -13,6 +13,9 @@ export const initialState = {
   unfollowLoading: false, // 언팔로우 시도중
   unfollowDone: false,
   unfollowError: null,
+  removeFollowerLoading: false,
+  removeFollowerDone: false,
+  removeFollowerError: null,
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
@@ -25,15 +28,17 @@ export const initialState = {
   changeNicknameLoading: false, // 닉네임 변경 시도중
   changeNicknameDone: false,
   changeNicknameError: null,
-  showUserForm: false,
+  showUserForm: null,
   showOtherProfile: false,
   showChewzooSubMenu: false,
   showPostForm: false,
   showBranchPostForm: false,
   branchPost: null,
   me: null,
+  userInfo: null,
   signUpData: {},
-  loginData: {},  
+  loginData: {},
+  signUpSubmit: false,
 };
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
@@ -52,6 +57,10 @@ export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
 export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
+export const CHANGE_AVATAR_REQUEST = 'CHANGE_AVATAR_REQUEST';
+export const CHANGE_AVATAR_SUCCESS = 'CHANGE_AVATAR_SUCCESS';
+export const CHANGE_AVATAR_FAILURE = 'CHANGE_AVATAR_FAILURE';
+
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
 export const FOLLOW_FAILURE = 'FOLLOW_FAILURE';
@@ -59,6 +68,10 @@ export const FOLLOW_FAILURE = 'FOLLOW_FAILURE';
 export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST';
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
+
+export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
+export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
+export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
@@ -74,7 +87,6 @@ export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 export const SHOW_USER_FORM = 'SHOW_USER_FORM';
 export const CLOSE_USER_FORM = 'CLOSE_USER_FORM';
 export const SHOW_OTHER_PROFILE = 'SHOW_OTHER_PROFILE';
-export const CLOSE_OTHER_PROFILE = 'CLOSE_OTHER_PROFILE';
 
 export const SHOW_CHEWZOO_SUBMENU = 'SHOW_CHEWZOO_SUBMENU';
 export const CLOSE_CHEWZOO_SUBMENU = 'CLOSE_CHEWZOO_SUBMENU';
@@ -82,6 +94,9 @@ export const CLOSE_CHEWZOO_SUBMENU = 'CLOSE_CHEWZOO_SUBMENU';
 export const SHOW_POSTFORM = 'SHOW_POSTFORM';
 export const SHOW_BRANCH_POSTFORM = 'SHOW_BRANCH_POSTFORM';
 export const CLOSE_POSTFORM = 'CLOSE_POSTFORM';
+
+export const SIGN_UP_SUBMIT_TRUE = 'SIGN_UP_SUBMIT_TRUE';
+export const SIGN_UP_SUBMIT_FALSE = 'SIGN_UP_SUBMIT_FALSE';
 
 export const loginRequestAction = (data) => ({
   type: LOG_IN_REQUEST,
@@ -94,6 +109,16 @@ export const logoutRequestAction = () => ({
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
+    case SHOW_USER_FORM:
+      draft.showUserForm = action.data.formType;
+      break;
+    case CLOSE_USER_FORM:
+      draft.showUserForm = null;
+      break;
+    case SHOW_OTHER_PROFILE:
+      draft.showUserForm = String('other');
+      draft.userInfo = action.data;
+      break;
     case LOAD_MY_INFO_REQUEST:
       draft.loadMyInfoError = null;
       draft.loadMyInfoLoading = true;
@@ -149,6 +174,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UNFOLLOW_FAILURE:
       draft.unfollowLoading = false;
       draft.unfollowError = action.error;
+      break;
+    case REMOVE_FOLLOWER_REQUEST:
+      draft.removeFollowerLoading = true;
+      draft.removeFollowerError = null;
+      draft.removeFollowerDone = false;
+      break;
+    case REMOVE_FOLLOWER_SUCCESS:
+      draft.removeFollowerLoading = false;
+      draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+      draft.removeFollowerDone = true;
+      break;
+    case REMOVE_FOLLOWER_FAILURE:
+      draft.removeFollowerLoading = false;
+      draft.removeFollowerError = action.error;
       break;
     case LOG_IN_REQUEST:
       draft.logInLoading = true;
@@ -207,17 +246,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.changeNicknameLoading = false;
       draft.changeNicknameError = action.error;
       break;
-    case SHOW_USER_FORM:
-      draft.showUserForm = true;
+    case CHANGE_AVATAR_REQUEST:
+      draft.changeAvatarLoading = true;
+      draft.changeAvatarError = null;
+      draft.changeAvatarDone = false;
       break;
-    case CLOSE_USER_FORM:
-      draft.showUserForm = false;
+    case CHANGE_AVATAR_SUCCESS:
+      draft.me.avatar = action.data.avatar;
+      draft.changeAvatarLoading = false;
+      draft.changeAvatarDone = true;
       break;
-    case SHOW_OTHER_PROFILE:
-      draft.showOtherProfile = true;
-      break;
-    case CLOSE_OTHER_PROFILE:
-      draft.showOtherProfile = false;
+    case CHANGE_AVATAR_FAILURE:
+      draft.changeAvatarLoading = false;
+      draft.changeAvatarError = action.error;
       break;
     case SHOW_CHEWZOO_SUBMENU:
       draft.showChewzooSubMenu = true;
@@ -236,6 +277,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.showPostForm = false;
       draft.showBranchPostForm = false;
       draft.branchPost = [];
+      break;
+    case SIGN_UP_SUBMIT_TRUE:
+      draft.signUpSubmit = true;
+      break;
+    case SIGN_UP_SUBMIT_FALSE:
+      draft.signUpSubmit = false;
       break;
     case ADD_POST_TO_ME:
       draft.me.Posts.unshift({ id: action.data });

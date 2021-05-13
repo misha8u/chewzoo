@@ -1,14 +1,15 @@
 import React, { useCallback } from 'react';
 import Media from 'react-media';
 import { Drawer } from 'antd';
+import PropTypes from 'prop-types';
 
 import { useSelector, useDispatch } from 'react-redux';
 
 import { CLOSE_POSTFORM } from '../../reducers/user';
-import BranchPostStoryForm from './BranchPostStoryForm'
-import PostStoryForm from './PostStoryForm'
+import BranchPostContentForm from './BranchPostContentForm'
+import PostContentForm from './PostContentForm'
 
-const PostForm = ({branch}) => {
+const PostForm = ({ pageType }) => {
   //PostForm의 Story와 Forecast를 Tabs로 구분하고 각각 js의 코드들을 정리해주세요.
   const dispatch = useDispatch();
   const { showPostForm, showBranchPostForm } = useSelector((state) => state.user);
@@ -23,53 +24,38 @@ const PostForm = ({branch}) => {
     <>
       <Media queries={{small: "(max-width: 767px)"}}>
         {(matches) => matches.small
-          ? (<>
+          ? <>
               <Drawer
                 placement="right"
                 closable={false}
                 onClose={onClose}
-                visible={showPostForm}
+                visible={showPostForm || showBranchPostForm}
                 width='75%'
               >
-                <PostStoryForm/>
-              </Drawer>
-
+                {showPostForm && <PostContentForm pageType={ pageType }/>}
+                {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}
+              </Drawer>            
+            </>
+          : <>
               <Drawer
                 placement="right"
                 closable={false}
                 onClose={onClose}
-                visible={showBranchPostForm}
-                width='75%'
-              >
-                <BranchPostStoryForm branch ={ branch }/>
-              </Drawer>
-            
-            </>)
-          : (<>
-              <Drawer
-                placement="right"
-                closable={false}
-                onClose={onClose}
-                visible={showPostForm}
+                visible={showPostForm || showBranchPostForm}
                 width='35%'
               >
-                <PostStoryForm/>
-              </Drawer>
-
-              <Drawer
-                placement="right"
-                closable={false}
-                onClose={onClose}
-                visible={showBranchPostForm}
-                width='35%'
-              >
-                <BranchPostStoryForm branch ={ branch }/>
-              </Drawer>
-            </>)
+                {showPostForm && <PostContentForm pageType={ pageType }/>}
+                {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}
+              </Drawer>   
+            </>
         }
       </Media>
     </>
   );
+};
+
+PostForm.propTypes = {
+  pageType: PropTypes.string.isRequired,
 };
 
 export default PostForm;

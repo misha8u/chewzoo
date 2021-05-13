@@ -14,6 +14,10 @@ module.exports = class User extends Model {
         type: DataTypes.STRING(30),
         allowNull: false, // 필수
       },
+      avatar: {
+        type: DataTypes.STRING(200),
+        allowNull: false,
+      },
       password: {
         type: DataTypes.STRING(100),
         allowNull: false, // 필수
@@ -29,6 +33,7 @@ module.exports = class User extends Model {
   static associate(db) {
     db.User.hasMany(db.Post);
     db.User.hasMany(db.Comment);
+    db.User.hasMany(db.Report);
     db.User.belongsToMany(db.Post, { through: 'Question', as: 'Questioned' })
     db.User.belongsToMany(db.Post, { through: 'Exclamation', as: 'Exclamationed' })
     db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });

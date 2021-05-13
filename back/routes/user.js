@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { Op } = require('sequelize');
 
-const { User, Post, Comment, Image } = require('../models');
+const { User, Post, Comment, Report, Image } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -43,10 +43,10 @@ router.get('/followers', isLoggedIn, async (req, res, next) => { // GET /user/fo
   try {
     const user = await User.findOne({ where: { id: req.user.id }});
     if (!user) {
-      res.status(403).send('없는 사람을 찾으려고 하시네요?');
+      res.status(403).send('뭘 하자는지 모르겠어..');
     }
     const followers = await user.getFollowers({
-      attributes: ['id', 'nickname'],
+      attributes: ['id', 'nickname', 'avatar'],
       limit: parseInt(req.query.limit, 10),
     });
     res.status(200).json(followers);
@@ -60,10 +60,10 @@ router.get('/followings', isLoggedIn, async (req, res, next) => { // GET /user/f
   try {
     const user = await User.findOne({ where: { id: req.user.id }});
     if (!user) {
-      res.status(403).send('없는 사람을 찾으려고 하시네요?');
+      res.status(403).send('뭘 하자는지 모르겠어..');
     }
     const followings = await user.getFollowings({
-      attributes: ['id', 'nickname'],
+      attributes: ['id', 'nickname', 'avatar'],
       limit: parseInt(req.query.limit, 10),
     });
     res.status(200).json(followings);
@@ -78,7 +78,7 @@ router.get('/:id', async (req, res, next) => { // GET /user/3
     const fullUserWithoutPassword = await User.findOne({
       where: { id: req.params.id },
       attributes: {
-        exclude: ['password']
+        exclude: ['password', 'email']
       },
       include: [{
         model: Post,
@@ -100,7 +100,7 @@ router.get('/:id', async (req, res, next) => { // GET /user/3
       data.Followers = data.Followers.length;
       res.status(200).json(data);
     } else {
-      res.status(404).json('존재하지 않는 사용자입니다.');
+      res.status(404).json('뭘 하자는지 모르겠어..');
     }
   } catch (error) {
     console.error(error);
@@ -115,21 +115,25 @@ router.get('/:id/posts', async (req, res, next) => { // GET /user/1/posts
       const where = {};
       if (parseInt(req.query.lastId, 10)) { // 초기 로딩이 아닐 때
         where.id = { [Op.lt]: parseInt(req.query.lastId, 10)}
-      } // 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+      }
       const posts = await user.getPosts({
         where,
         limit: 10,
+        order: [
+          ['createdAt', 'DESC'],
+          [Comment, 'createdAt', 'ASC'],
+        ],
         include: [{
           model: Image,
         }, {
           model: Comment,
           include: [{
             model: User,
-            attributes: ['id', 'nickname'],
+            attributes: ['id', 'nickname', 'avatar'],
           }]
         }, {
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }, {
           model: User, // 신뢰해요 누른 사람
           as: 'Exclamationers',
@@ -139,20 +143,25 @@ router.get('/:id/posts', async (req, res, next) => { // GET /user/1/posts
           as: 'Questioners',
           attributes: ['id'],
         }, {
+          model: Report,
+          include: [{
+            model: User,
+            attributes: ['id', 'nickname'],
+          }]
+        }, {
           model: Post,
           as: 'Branch',
           include: [{
             model: User,
-            attributes: ['id', 'nickname'],
+            attributes: ['id', 'nickname', 'avatar'],
           }, {
             model: Image,
           }]
         }],
       });
-      console.log(posts);
       res.status(200).json(posts);
     } else {
-      res.status(404).send('존재하지 않는 사용자입니다.');
+      res.status(404).send('뭘 하자는지 모르겠어..');
     }
   } catch (error) {
     console.error(error);
@@ -205,13 +214,14 @@ router.post('/', isNotLoggedIn, async (req, res, next) => { // POST /user/
       }
     });
     if (exUser) {
-      return res.status(403).send('이미 사용 중인 아이디입니다.');
+      return res.status(403).send('이미 가입한 이메일입니다.');
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     await User.create({
       email: req.body.email,
       nickname: req.body.nickname,
       password: hashedPassword,
+      avatar: String('avatars/ava0.png')
     });
     res.status(201).send('ok');
   } catch (error) {
@@ -240,11 +250,26 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.patch('/avatar', isLoggedIn, async (req, res, next) => {
+  try {
+    const changedAvatar = `avatars/ava` + String(req.body.avatar) + `.png`
+    await User.update({
+      avatar: changedAvatar
+    }, {
+      where: { id: req.user.id },
+    });
+    res.status(200).json({ avatar: changedAvatar });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => { // PATCH /user/1/follow
   try {
     const user = await User.findOne({ where: { id: req.params.userId }});
     if (!user) {
-      res.status(403).send('없는 사람을 팔로우하려고 하시네요?');
+      res.status(403).send('뭘 하자는지 모르겠어..');
     }
     await user.addFollowers(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
@@ -258,7 +283,7 @@ router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => { // DELE
   try {
     const user = await User.findOne({ where: { id: req.params.userId }});
     if (!user) {
-      res.status(403).send('없는 사람을 언팔로우하려고 하시네요?');
+      res.status(403).send('뭘 하자는지 모르겠어..');
     }
     await user.removeFollowers(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
@@ -272,7 +297,7 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => { // DE
   try {
     const user = await User.findOne({ where: { id: req.params.userId }});
     if (!user) {
-      res.status(403).send('없는 사람을 차단하려고 하시네요?');
+      res.status(403).send('뭘 하자는지 모르겠어..');
     }
     await user.removeFollowings(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
