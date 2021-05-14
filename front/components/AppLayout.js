@@ -14,7 +14,7 @@ import useInput from '../hooks/useInput';
 import LoginForm from './LoginForm';
 import PostForm from '../components/postform/PostForm';
 import Profile from './Profile';
-import ChewzooSubMenu from './ChewzooSubMenu';
+import ChewzooSubMenu from './ChewzooSubMenu'
 import ChewzooAvatar from '../components/ChewzooAvatar';
 
 const AppLayout = ({ children, pageType }) => {
