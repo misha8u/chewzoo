@@ -5,24 +5,24 @@ module.exports = {
   development: {
     username: 'root',
     password: process.env.DB_PASSWORD,
-    database: 'react_chewzoo',
-    //database: 'chewzoo_development',
+    //database: 'react_chewzoo',
+    database: 'chewzoo_development',
     host: '127.0.0.1',
     dialect: 'mysql'
   },
   test: {
     username: 'root',
     password: process.env.DB_PASSWORD,
-    database: 'react_chewzoo',
-    //database: 'chewzoo_test',
+    //database: 'react_chewzoo',
+    database: 'chewzoo_test',
     host: '127.0.0.1',
     dialect: 'mysql'
   },
   production: {
     username: 'root',
     password: process.env.DB_PASSWORD,
-    database: 'react_chewzoo',
-    //database: 'chewzoo_production',
+    //database: 'react_chewzoo',
+    database: 'chewzoo_production',
     host: '127.0.0.1',
     dialect: 'mysql'
   }
