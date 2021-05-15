@@ -9,7 +9,6 @@ const path = require('path');
 const hpp = require('hpp');
 const helmet = require('helmet');
 
-
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
@@ -30,6 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
+  console.log('production 상태')
 } else {
   app.use(morgan('dev'));
 }
