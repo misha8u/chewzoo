@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('dev'));
 }
 app.use(cors({
-  origin: ['http://localhost:3060', 'chewzoo.co.kr'],
+  origin: ['http://localhost:3060', 'chewzoo.co.kr', 'http://52.78.239.181'],
   credentials: true,
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads')));
