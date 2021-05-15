@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import axios from 'axios';
+import { backUrl } from '../../config/config';
 import { LOAD_POST_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
 import wrapper from '../../store/configureStore';
 import PostCard from '../../components/post/PostCard';
@@ -99,7 +100,7 @@ const Post = () => {
 
               <Col style={ PostContainerCenterStyle } ref={postDiv}>
                 <Empty
-                  image = "http://localhost:3065/resource/searching.png"
+                  image = {`${backUrl}/resource/searching.png`}
                   description={
                     <span>없는 걸 찾으려 하지마!</span>
                   }

@@ -8,6 +8,7 @@ import { END } from 'redux-saga';
 import { Button, Col, Empty } from 'antd';
 
 import axios from 'axios';
+import { backUrl } from '../../config/config';
 import { LOAD_HASHTAG_POSTS_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
 import PostCard from '../../components/post/PostCard';
 import wrapper from '../../store/configureStore';
@@ -95,7 +96,7 @@ const Hashtag = () => {
             ))}
             {mainPosts.length === 0 &&
               <Empty
-                image = "http://localhost:3065/resource/searching.png"
+                image = {`${backUrl}/resource/searching.png`}
                 description={
                   <><span style={{ fontWeight: 'bold', color: '#E13427' }}>{tag}</span><span>에 대한 건 없어..</span></>
                 }

@@ -177,7 +177,7 @@ const Profile = () => {
               <Row style={ formWrapperStyle }>
                 {[0,1,2,3,4,5,6,7,8,9,10,11,12].map((c) => (
                   <img style={ avatarFormStyle } 
-                    src={`http://localhost:3065/avatars/ava${c}.png`}
+                    src={`${backUrl}/avatars/ava${c}.png`}
                     onClick={onChangeAvatar(c)}
                   />
                 ))}

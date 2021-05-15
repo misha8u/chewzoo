@@ -5,6 +5,7 @@ import Router from 'next/router';
 import Head from 'next/head';
 import axios from 'axios';
 
+import { backUrl } from '../config/config';
 import { END } from 'redux-saga';
 import { useDispatch, useSelector } from 'react-redux';
 import { SIGN_UP_REQUEST, LOAD_MY_INFO_REQUEST, SIGN_UP_SUBMIT_FALSE } from '../reducers/user';
@@ -196,7 +197,7 @@ const Signup = () => {
               <p style={{ backgroundColor: '#FFFFFF', padding: '5px'}}>
                 <div style={{ fontWeight: 'bold', textAlign: 'center', margin: '10px'}}>&#60; 서비스 운영 정책 &#62;</div>
                 <div style={{ textAlign: 'center', margin: '10px'}}>
-                  <img role="welcome" alt="welcome" src ="http://localhost:3065/resource/signupTitle.png" />
+                  <img role="welcome" alt="welcome" src ={`${backUrl}/resource/signupTitle.png`}/>
                 </div>
                 <span>
                   📈 cHEWzOO(츄주)는 "주식을 씹는다."라는 뜻의 이름을 가진 주식 투자자 커뮤니티입니다.

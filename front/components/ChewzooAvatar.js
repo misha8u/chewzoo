@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { SHOW_USER_FORM } from '../reducers/user';
+import { backUrl } from '../config/config';
 
 const ChewzooAvatar = ({ userId, userAvatar, avatarPosition, disabledClick }) => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const ChewzooAvatar = ({ userId, userAvatar, avatarPosition, disabledClick }) =>
     <>
       <img
         onClick={ onUserForm }
-        src={`http://localhost:3065/${userAvatar}`}
+        src={`${backUrl}/${userAvatar}`}
         style={avatarPosition === 'comment'
             ? commentAvatarStyle
             : postAvatarStyle

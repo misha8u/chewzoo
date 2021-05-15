@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import axios from 'axios';
+import { backUrl } from '../../config/config';
 import { LOAD_USER_POSTS_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
 import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
 import PostCard from '../../components/post/PostCard';
@@ -99,7 +100,7 @@ const User = () => {
           ))}
           {mainPosts.length === 0 &&
             <Empty
-              image = "http://localhost:3065/resource/noposts.png"
+              image = {`${backUrl}/resource/noposts.png`}
               description={
                 <><span style={{ fontWeight: 'bold' }}>{userInfo.nickname}</span><span> 주주님은 <br /> 하신 말씀이 없네..</span></>
               }

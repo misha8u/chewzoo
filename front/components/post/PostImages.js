@@ -4,6 +4,7 @@ import { Image, Space, Col, Row, Carousel, Tooltip } from 'antd';
 import { ZoomInOutlined, DeleteOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import { REMOVE_IMAGE } from '../../reducers/post';
 import { useDispatch } from 'react-redux';
+import { backUrl } from '../../config/config';
 
 const PostImages = ({ images, postForm }) => {
   const dispatch = useDispatch();
@@ -77,7 +78,7 @@ const PostImages = ({ images, postForm }) => {
               >
                 <Image
                 role="presentation"
-                src={typeof(v) === 'object' ? `http://localhost:3065/${v.src}` : `http://localhost:3065/${v}`}
+                src={typeof(v) === 'object' ? `${backUrl}/${v.src}` : `${backUrl}/${v}`}
                 alt={v}
                 style={imageBox}
                 preview={imgPreview}/>
