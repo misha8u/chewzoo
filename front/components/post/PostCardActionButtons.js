@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 
-import { Col, List, Row, Divider, Badge, Modal } from 'antd';
+import { Col, List, Row, Divider, Badge, Modal, message } from 'antd';
 import { QuestionCircleTwoTone, QuestionCircleOutlined, 
   ExclamationCircleTwoTone, ExclamationCircleOutlined, 
   MessageOutlined, MessageFilled, BranchesOutlined,
@@ -23,8 +23,20 @@ const PostCardActionButtons = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [ImageFormOpened, setImageFormOpened] = useState(true);
   const dispatch = useDispatch();
-  const { removeCommentError } = useSelector((state) => state.post);
+  const { removeCommentError, onExclamationDone, onQuestionDone } = useSelector((state) => state.post);
   const id = useSelector((state) => state.user.me?.id);
+
+  useEffect(() => {
+    if (removeCommentError) {
+      message.error({content: removeCommentError, style: {marginTop: '3vh'}});
+    }
+    if (onExclamationDone) {
+      message.success({content: '신뢰해!', style: {marginTop: '3vh'}});
+    }
+    if (onQuestionDone) {
+      message.success({content: '의심해?', style: {marginTop: '3vh'}});
+    }
+  }, [removeCommentError])
 
   const [commentHover, setCommentHover] = useState(null);
   const mouseEnter = useCallback((e) => () => {
@@ -135,12 +147,6 @@ const PostCardActionButtons = ({ post }) => {
   //      data: { commentId: item.id },
   //    })
   //}, []);
-
-  useEffect(() => {
-    if (removeCommentError) {
-      message.error({content: removeCommentError, style: {marginTop: '3vh'}});
-    }
-  }, [removeCommentError])
 
   const CommentList = post.Comments?.slice().sort((a, b) => a.id - b.id);
 

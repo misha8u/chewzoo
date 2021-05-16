@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -10,6 +10,7 @@ import { Button, Col, Empty } from 'antd';
 import axios from 'axios';
 import { backUrl } from '../../config/config';
 import { LOAD_HASHTAG_POSTS_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
+import { SHOW_POSTFORM } from '../reducers/user';
 import PostCard from '../../components/post/PostCard';
 import wrapper from '../../store/configureStore';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
@@ -21,6 +22,7 @@ const Hashtag = () => {
   const { tag } = router.query;
   const { mainPosts, hasMorePosts, loadHashtagPostsLoading,
     branchDone, addPostDone, focusCardDone, focusCard } = useSelector((state) => state.post);
+  const { me } = useSelector((state) => state.user);
   const postDiv = useRef();
 
   useEffect(() => {
@@ -55,6 +57,12 @@ const Hashtag = () => {
       {postDiv.current && postDiv.current.removeEventListener('scroll', onScroll);}
     };
   }, [mainPosts, hasMorePosts, tag, loadHashtagPostsLoading]);
+
+  const onPostForm = useCallback(()=> {
+    dispatch({
+      type: SHOW_POSTFORM,
+    });
+  },);
 
   const PostContainerStyle = {
     display: 'flex',
@@ -102,7 +110,10 @@ const Hashtag = () => {
                 }
                 style={{ marginTop: '50px'}}
               >
-                <Link href="/"><Button type="primary">내가 첫번째다!</Button></Link>
+                {me
+                    ? <Button type="primary" onClick={ onPostForm }>내가 첫번째다!</Button>
+                    : <Link href="/"><Button type="primary">아..어..</Button></Link>
+                }
               </Empty>
             }
         </Col>

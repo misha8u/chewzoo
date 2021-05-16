@@ -133,7 +133,7 @@ const Signup = () => {
             jOIN
         </Divider>
         <Row>
-        <Col xs={0} md={3} />      
+        <Col xs={0} md={3} />
 
         <Col xs={24} md={18}>
           <Form layout="vertical" onFinish={onSubmit} style={{ padding: 10 }} name="basic">

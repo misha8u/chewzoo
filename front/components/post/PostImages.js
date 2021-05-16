@@ -77,11 +77,12 @@ const PostImages = ({ images, postForm }) => {
                 placement="bottom"
               >
                 <Image
-                role="presentation"
-                src={typeof(v) === 'object' ? `${backUrl}/${v.src}` : `${backUrl}/${v}`}
-                alt={v}
-                style={imageBox}
-                preview={imgPreview}/>
+                  role="presentation"
+                  src={typeof(v) === 'object' ? `${v.src}` : `${v}`}
+                  alt={v}
+                  style={imageBox}
+                  preview={imgPreview}
+                />
               </Tooltip>
             ))}
           </Carousel>
