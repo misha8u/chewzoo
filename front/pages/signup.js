@@ -218,7 +218,7 @@ const Signup = () => {
                   🧮 경제와 주식, 투자에 대한 모든 정보 공유와 의견을 환영합니다.
                 </span><br />
                 <span>
-                  🚔 특정 정치적, 사회적, 성별 집단 및 개인에 대한 모든 비난과 욕설 또는 지지 의사 표현(별명, 게시글, 덧글)은 제제 대상이 될 수 있습니다.
+                  🚔 특정 정치적, 사회적, 성별 집단 및 개인에 대한 모든 비난과 욕설 또는 지지 의사 표현(별명, 게시글, 덧글)은 제재 대상이 될 수 있습니다.
                 </span><br />
                 <br /><p>
                   <Checkbox ref={userServiceTerm} name="service-term" checked={serviceTerm} onChange={onChangeServiceTerm} style={{ fontWeight: 'bold' }}>
