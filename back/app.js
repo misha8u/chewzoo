@@ -30,14 +30,18 @@ if (process.env.NODE_ENV === 'production') {
   app.use(hpp());
   app.use(helmet());
   console.log('production 상태')
+  app.use(cors({
+    origin: 'http://chewzoo.kr',
+    credentials: true,
+  }));
 } else {
   app.use(morgan('dev'));
+  app.use(cors({
+    origin: true,
+    credentials: true,
+  }));
 }
-app.use(cors({
-  origin: 'http://chewzoo.kr',
-  //http://localhost:3060
-  credentials: true,
-}));
+
 app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
