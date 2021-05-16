@@ -10,7 +10,7 @@ import { Button, Col, Empty } from 'antd';
 import axios from 'axios';
 import { backUrl } from '../../config/config';
 import { LOAD_HASHTAG_POSTS_REQUEST, RETURNED_FOCUSCARD } from '../../reducers/post';
-import { SHOW_POSTFORM } from '../reducers/user';
+import { SHOW_POSTFORM } from '../../reducers/user';
 import PostCard from '../../components/post/PostCard';
 import wrapper from '../../store/configureStore';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
