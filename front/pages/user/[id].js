@@ -106,7 +106,7 @@ const User = () => {
               }
               style={{ marginTop: '50px'}}
             >
-              <Link href="/"><Button type="primary">돌아가자!</Button></Link>
+              <Link href="/" prefetch={false}><Button type="primary">돌아가자!</Button></Link>
             </Empty>
           }
         </Col>

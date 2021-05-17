@@ -96,7 +96,7 @@ const LoginForm = () => {
             onChange={onChangePassword} required />
         </div>
         <p></p>
-        <Link href="/signup">
+        <Link href="/signup" prefetch={false}>
           <a onClick={handleCancel}>당장 가입해서 누군지 알려주기</a>
         </Link>
       </Form>

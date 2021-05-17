@@ -25,7 +25,9 @@ db.sequelize.sync()
   .catch(console.error);
 passportConfig();
 
+
 if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
@@ -50,9 +52,10 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   secret: process.env.COOKIE_SECRET,
+  proxy: true,
   cookie: {
     httpOnly: true,
-    secure: false,
+    secure: true,
     domain: process.env.NODE_ENV === 'production' && '.chewzoo.kr'
   }
 }));
@@ -68,7 +71,6 @@ app.use('/post', postRouter);
 app.use('/user', userRouter);
 app.use('/hashtag', hashtagRouter);
 
-//local => 3065, aws => 80
-app.listen(80, () => {
+app.listen(3065, () => {
   console.log('서버 실행 중!');
 });

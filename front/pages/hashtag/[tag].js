@@ -112,7 +112,7 @@ const Hashtag = () => {
               >
                 {me
                     ? <Button type="primary" onClick={ onPostForm }>내가 첫번째다!</Button>
-                    : <Link href="/"><Button type="primary">아..어..</Button></Link>
+                    : <Link href="/" prefetch={false}><Button type="primary">아..어..</Button></Link>
                 }
               </Empty>
             }

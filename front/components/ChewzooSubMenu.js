@@ -84,7 +84,7 @@ const ChewzooSubMenu = () => {
           </Menu.Item>
 
           <Menu.Item style={ChewzooMenuStyle}>
-              <Link href={"https://open.kakao.com/me/chewzoo"}>
+              <Link href={"https://open.kakao.com/me/chewzoo"} prefetch={false}>
               <a>문의,후원</a>
               </Link>
           </Menu.Item>

@@ -106,7 +106,7 @@ const Post = () => {
                   }
                   style={{ marginTop: '50px'}}
                 >
-                  <Link href="/"><Button type="primary">아.. 미안</Button></Link>
+                  <Link href="/" prefetch={false}><Button type="primary">아.. 미안</Button></Link>
                 </Empty>
               </Col>
 
