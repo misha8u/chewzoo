@@ -25,7 +25,6 @@ db.sequelize.sync()
   .catch(console.error);
 passportConfig();
 
-
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
   app.use(morgan('combined'));
@@ -33,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
   console.log('production 상태')
   app.use(cors({
-    origin: 'http://chewzoo.kr',
+    origin: 'https://chewzoo.kr',
     credentials: true,
   }));
 } else {
