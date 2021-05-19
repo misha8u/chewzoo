@@ -10,6 +10,7 @@ const PostImages = ({ images, postForm }) => {
   const dispatch = useDispatch();
   const imageCarousel = useRef();
   const [currentPage, setCurrentPage] = useState(0);
+  const isProduction = backUrl === 'http://localhost:3065' ? false : true;
 
   const imgPreview = {
     maskClassName: 'customize-mask',
@@ -78,7 +79,9 @@ const PostImages = ({ images, postForm }) => {
               >
                 <Image
                   role="presentation"
-                  src={typeof(v) === 'object' ? `${v.src}` : `${v}`}
+                  src={isProduction 
+                    ? typeof(v) === 'object' ? `${v.src}` : `${v}`
+                    : typeof(v) === 'object' ? `${backUrl}/${v.src}` : `${backUrl}/${v}`}
                   alt={v}
                   style={imageBox}
                   preview={imgPreview}

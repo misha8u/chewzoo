@@ -46,9 +46,9 @@ const CommentForm = ({ post }) => {
           <Input.TextArea 
             rows={1}
             value={commentText}
-            placeholder="80자 이내로 짧게"
+            placeholder="100자 이내로 짧게"
             onChange={onChangeCommentText}
-            maxLength={80}
+            maxLength={100}
             style={{ margin: '0px 0px 16px 5px', width: 'calc(85% - 35px)' }}
             autoSize={{ minRows: 1, maxRows: 3 }}
             />

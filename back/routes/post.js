@@ -1,7 +1,7 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 
@@ -22,15 +22,29 @@ AWS.config.update({
   region: 'ap-northeast-2',
 });
 
+const _storage = process.env.NODE_ENV === 'production'  
+  ? multerS3({
+      s3: new AWS.S3(),
+      bucket: 'chewzoo-s3',
+      key(req, file, cb) {
+        cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
+      }
+    })
+  : multer.diskStorage({
+      destination(req, file, done) {
+        done(null, 'uploads');
+      },
+      filename(req, file, done) { // 제로초.png
+        const ext = path.extname(file.originalname); // 확장자 추출(.png)
+        const basename = path.basename(file.originalname, ext); // 제로초
+        done(null, _storage + basename + '_' + new Date().getTime() + ext); // 제로초15184712891.png
+      },
+    })
+;
+
 const upload = multer({
-  storage: multerS3({
-    s3: new AWS.S3(),
-    bucket: ' chewzoo-s3',
-    key(req, file, cb) {
-      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
-    }
-  }),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  storage: _storage,
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
 
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
@@ -92,7 +106,11 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 });
 
 router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => { // POST /post/images
-  res.json(req.files.map((v) => v.location));
+  if (process.env.NODE_ENV === 'production') {
+    res.json(req.files.map((v) => v.location));
+  } else {
+    res.json(req.files.map((v) => v.filename));
+  }
 });
 
 router.get('/:postId', async (req, res, next) => {

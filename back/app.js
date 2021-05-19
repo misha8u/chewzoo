@@ -20,7 +20,7 @@ dotenv.config();
 const app = express();
 db.sequelize.sync()
   .then(() => {
-    console.log('db 연결 성공');
+    console.log('DB 연결 성공');
   })
   .catch(console.error);
 passportConfig();
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   app.use(morgan('dev'));
   app.use(cors({
-    origin: true,
+    origin: 'http://localhost:3060',
     credentials: true,
   }));
 }
@@ -54,7 +54,7 @@ app.use(session({
   proxy: true,
   cookie: {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production' && true,
     domain: process.env.NODE_ENV === 'production' && '.chewzoo.kr'
   }
 }));
@@ -62,7 +62,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', (req, res) => {
-  res.send('hello express');
+  res.send('Express is ongoing.');
 });
 // API는 다른 서비스가 내 서비스의 기능을 실행할 수 있게 열어둔 창구
 app.use('/posts', postsRouter);
