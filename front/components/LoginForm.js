@@ -42,7 +42,6 @@ const LoginForm = () => {
       message.error({content: '비밀번호를 확인해봐!', style: {marginTop: '3vh'}})
       return userPassword.current.focus();
     }
-    console.log(email, password);
     dispatch({
       type: LOG_IN_REQUEST,
       data: { email, password },

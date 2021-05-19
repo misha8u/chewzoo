@@ -36,7 +36,7 @@ const PostCardActionButtons = ({ post }) => {
     if (onQuestionDone) {
       message.success({content: '의심해?', style: {marginTop: '3vh'}});
     }
-  }, [removeCommentError])
+  }, [removeCommentError, onExclamationDone, onQuestionDone])
 
   const [commentHover, setCommentHover] = useState(null);
   const mouseEnter = useCallback((e) => () => {

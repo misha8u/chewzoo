@@ -21,13 +21,11 @@ import {
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
 function branchAPI(data) {
-  console.log(data.postId, 'saga branchAPI 함수');
   return axios.post(`/post/${data.postId}/branch`, data);
 }
 
 function* branch(action) {
   try {
-    console.log(action.data, 'saga branch 함수');
     const result = yield call(branchAPI, action.data);
     yield put({
       type: BRANCH_SUCCESS,
@@ -153,7 +151,6 @@ function loadPostsAPI(lastId) {
 function* loadPosts(action) {
   try {
     const result = yield call(loadPostsAPI, action.lastId);
-    console.log('불러옴', action.lastId)
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data,
@@ -208,7 +205,6 @@ function* loadHashtagPosts(action) {
 }
 
 function addPostAPI(data) {
-  console.log(data, '문장 추가 합니당.');
   return axios.post('/post', data);
 }
 
@@ -325,12 +321,10 @@ function uploadImagesAPI(data) {
 function* uploadImages(action) {
   try {
     const result = yield call(uploadImagesAPI, action.data);
-    console.log('uploadImageAPI 성공')
     yield put({
       type: UPLOAD_IMAGES_SUCCESS,
       data: result.data,
     });
-    console.log('UPLOAD_IMAGES_SUCCESS 성공')
   } catch (err) {
     console.error(err);
     yield put({
@@ -342,7 +336,6 @@ function* uploadImages(action) {
 
 function* returnFocusCard(action) {
   try {
-    console.log(action.data, 'from saga');
     yield put({
       data: action.data,
     });
