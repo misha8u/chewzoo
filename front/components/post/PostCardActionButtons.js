@@ -22,22 +22,15 @@ moment.locale('ko');
 const PostCardActionButtons = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [ImageFormOpened, setImageFormOpened] = useState(true);
-  const [thisPostNumber, setThisPostNumber] = useState(null);
   const dispatch = useDispatch();
-  const { removeCommentError, onExclamationDone, onQuestionDone } = useSelector((state) => state.post);
+  const { removeCommentError, onExclamationError, onQuestionError } = useSelector((state) => state.post);
   const id = useSelector((state) => state.user.me?.id);
 
   useEffect(() => {
     if (removeCommentError) {
-      message.error({content: removeCommentError, style: {marginTop: '3vh'}});
+      return (message.error({content: removeCommentError, style: {marginTop: '3vh'}}));
     }
-    if (onExclamationDone && Number(post.id) === Number(thisPostNumber)) {
-      message.success({content: '신뢰해!', style: {marginTop: '3vh'}});
-    }
-    if (onQuestionDone && Number(post.id) === Number(thisPostNumber)) {
-      message.success({content: '의심해?', style: {marginTop: '3vh'}});
-    }
-  }, [removeCommentError, onExclamationDone, onQuestionDone, thisPostNumber])
+  }, [removeCommentError])
 
   const [commentHover, setCommentHover] = useState(null);
   const mouseEnter = useCallback((e) => () => {
@@ -66,9 +59,9 @@ const PostCardActionButtons = ({ post }) => {
           type: ON_EXCLAMATION_REQUEST,
           data: post.id,
         }),
-        setThisPostNumber(post.id)
+        !onExclamationError && message.success({content: '신뢰해!', style: {marginTop: '3vh'}})
       )
-  }, [id, thisPostNumber]);
+  }, [id]);
 
   const offToggleExclamation = useCallback(() => {
     if (!id) {
@@ -98,9 +91,9 @@ const PostCardActionButtons = ({ post }) => {
           type: ON_QUESTION_REQUEST,
           data: post.id,
         }),
-        setThisPostNumber(post.id)
+        !onQuestionError && message.success({content: '의심해?', style: {marginTop: '3vh'}})
       )
-  }, [id, thisPostNumber]);
+  }, [id]);
 
   const offToggleQuestion = useCallback(() => {
     if (!id) {

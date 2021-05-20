@@ -4,7 +4,6 @@ const { Model } = DataTypes;
 module.exports = class Report extends Model {
   static init(sequelize) {
     return super.init({
-      // id가 기본적으로 들어있다.
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -13,12 +12,6 @@ module.exports = class Report extends Model {
         type: DataTypes.STRING(200),
         allowNull: false,
       },
-      reportedUserNickname: {
-        type: DataTypes.STRING(200),
-        allowNull: false,
-      },
-      // UserId: 1
-      // PostId: 3
     }, {
       modelName: 'Report',
       tableName: 'reports',

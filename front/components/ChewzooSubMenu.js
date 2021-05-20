@@ -54,9 +54,9 @@ const ChewzooSubMenu = () => {
         <Media queries={{small: "(max-width: 767px)"}}>
           {(matches) => matches.small
           ? <Input.Search 
-              value={searchInput}
-              onChange={onChangeSearchInput}
-              onSearch={onSearch}
+              value={ searchInput }
+              onChange={ onChangeSearchInput }
+              onSearch={ onSearch }
               style={{ padding: '16px' }} 
               placeholder="내 관종은..?" />
           : <></>
