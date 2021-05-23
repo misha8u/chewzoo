@@ -73,6 +73,11 @@ const Post = () => {
               <title>
                 cHEWzOO | {singlePost.User.nickname}
               </title>
+              <meta name="description" content={singlePost.content} />
+              <meta property="og:title" content={`cHEWzOO by ${singlePost.User.nickname}`} />
+              <meta property="og:description" content={singlePost.content} />
+              <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
+              <meta property="og:url" content={`https://chewzoo.kr/post/${id}`} />
             </Head>
 
             <div style={ PostContainerStyle }>

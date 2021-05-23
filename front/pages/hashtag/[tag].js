@@ -93,6 +93,10 @@ const Hashtag = () => {
           <title>
             cHEWzOO | {tag}
           </title>
+          <meta name="description" content={mainPosts[0] && mainPosts[0].content} />
+          <meta property="og:title" content={`cHEWzOO #${tag}`} />
+          <meta property="og:description" content={mainPosts[0] && mainPosts[0].content} />
+          <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
       </Head>
       <div style={ PostContainerStyle }>
         <Col xs={2} md={7} style ={ PostContainerSideStyle }>

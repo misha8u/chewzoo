@@ -87,6 +87,10 @@ const User = () => {
           <title>
             cHEWzOO | {userInfo.nickname}
           </title>
+          <meta name="description" content={mainPosts[0] && mainPosts[0].content} />
+          <meta property="og:title" content={`cHEWzOO by ${userInfo.nickname}`} />
+          <meta property="og:description" content={mainPosts[0] && mainPosts[0].content} />
+          <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
         </Head>
       )}
       
