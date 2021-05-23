@@ -5,7 +5,7 @@ import Router from 'next/router';
 
 import Media from 'react-media';
 import { Col, Row, Input, Button, message } from 'antd';
-import { MenuOutlined, LoginOutlined, EditFilled, CheckOutlined } from '@ant-design/icons'
+import { MenuOutlined, LoginOutlined, EditFilled, CheckOutlined, UserAddOutlined } from '@ant-design/icons'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { SHOW_USER_FORM, SHOW_CHEWZOO_SUBMENU, SHOW_POSTFORM, SIGN_UP_SUBMIT_TRUE } from '../reducers/user';
@@ -106,6 +106,17 @@ const AppLayout = ({ children, pageType }) => {
     fontWeight: 'bold'
   };
 
+  const JoinButtonStyle = {
+    float: 'left',
+    margin: '6.5px 5px 5px 5px',
+    verticalAlign: 'middle',
+    width: 'calc(100% - 20px)',
+    fontSize: '20px',
+    padding: '0px',
+    fontWeight: 'bold',
+    color: '#E13427',
+  };
+
   const MenuSearchStyle = {
     float: 'right',
     margin: '6.5px 6px 5px 5px',
@@ -172,16 +183,27 @@ const AppLayout = ({ children, pageType }) => {
           <Col xs={2} md={7}/>
 
           <Col xs={10} md={5}>
-              {me &&
-                <Row style={ userInfoStyle } onClick={ onUserForm }>
-                  <Col>
-                    <ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'comment'} disabledClick={true}/>
-                  </Col>
-                  <Col style={ nicknameStyle }>
-                      {me.nickname}
-                  </Col>
-                </Row>
-              }
+            {pageType === 'signup'
+              ? <></>
+              : <>
+                  {me
+                    ?  <Row style={ userInfoStyle } onClick={ onUserForm }>
+                        <Col>
+                          <ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'comment'} disabledClick={true}/>
+                        </Col>
+                        <Col style={ nicknameStyle }>
+                            {me.nickname}
+                        </Col>
+                      </Row>
+                    : <Link href="/signup" prefetch={false}>
+                        <Button style={ JoinButtonStyle }>
+                          {/*jOIN*/}
+                          <UserAddOutlined />
+                        </Button>
+                      </Link>
+                  }
+                </>
+            }
           </Col>
 
           <Col xs={10} md={5}>
@@ -195,6 +217,7 @@ const AppLayout = ({ children, pageType }) => {
                         <EditFilled/>
                       </Button>
                     : <Button type={'primary'} style={ WriterButtonStyle } onClick={ onUserForm }>
+                        {/*LogIN*/}
                         <LoginOutlined/>
                       </Button>
                   }

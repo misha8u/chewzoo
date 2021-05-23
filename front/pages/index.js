@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
+import Head from 'next/head';
+import { backUrl } from '../config/config';
 
 import { Col } from 'antd';
 
@@ -82,6 +84,13 @@ const Home = () => {
   
   return (
     <AppLayout>
+        <Head>
+        <title>cHEWzOO</title>
+        <meta name="description" content={'츄주, 주식을 씹다! '} />
+        <meta property="og:title" content={'cHEWzOO'} />
+        <meta property="og:description" content={'츄주, 주식을 씹다!'} />
+        <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
+      </Head>
       <div style={ PostContainerStyle }>
         <Col xs={2} md={7} style ={ PostContainerSideStyle }>
         </Col>
