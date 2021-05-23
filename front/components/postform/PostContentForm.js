@@ -116,7 +116,7 @@ const PostContentForm = ({pageType}) => {
           <Col style={ nicknameStyle }>{me.nickname}</Col>
         </Row>
 
-        <Input.TextArea maxLength={500} 
+        <Input.TextArea maxLength={5000} 
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={ postText }
           onChange={ onChangePostText }/>

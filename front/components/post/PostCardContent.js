@@ -1,13 +1,12 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { RETURN_FOCUSCARD } from '../../reducers/post';
 
 const PostCardContent = ({ postData, postId }) => {
   const [seeMoreOpened, setSeeMoreOpened] = useState(false);
-  const [contentMaxLength, setContentMaxLength] = useState(500);
   const dispatch = useDispatch();
 
   const onToggleSeeMore = useCallback(() => {
@@ -20,13 +19,38 @@ const PostCardContent = ({ postData, postId }) => {
     }
   }, [seeMoreOpened]);
 
-  useEffect(() => {
-    if (seeMoreOpened) {
-      setContentMaxLength(postData.length)
-    } else {
-      setContentMaxLength(500)
+  const postDataWithHyperLink = postData && postData.split(/(?![^<]*>|[^<>]*<\/(?!(?:p|pre)>))(https?:\/\/[a-z0-9&#=.\/\-?_%A-Z+:]+)/g).map((v) => {
+    if (v && v.match(/(?![^<]*>|[^<>]*<\/(?!(?:p|pre)>))(https?:\/\/[a-z0-9&#=.\/\-?_%A-Z+:]+)/)) {
+      return (
+        <a
+          href={v}
+          as={v}
+          prefetch={false}
+          key={v}
+          target='_blank'
+        >
+          &#60;URL 이동&#62;
+        </a>
+      );
     }
-  }, [seeMoreOpened])
+    return (
+      v && v.split(/(#[^\s#]+)/g).map((i) => {
+        if (i && i.match(/(#[^\s#]+)/)) {
+          return (
+            <Link
+              href={{ pathname: '/hashtag', query: { tag: i.slice(1) } }}
+              as={`/hashtag/${i.slice(1)}`}
+              prefetch={false}
+              key={i}
+            >
+              <a>{i}</a>
+            </Link>
+          )
+        }
+        return i
+      })
+    )
+  });
 
   const moreStyle = {
     position: 'relative',
@@ -48,33 +72,21 @@ const PostCardContent = ({ postData, postId }) => {
   }
   
   return(
-    <div>
+    <div style={{whiteSpace: 'pre-wrap'}}>
       {postData && postData.length > 500
         ? <>
             <div style={{ position: 'relative'}}>
               {!seeMoreOpened && <div style={moreContentStyle}/>}
-              {postData.slice(0, contentMaxLength)}
+              {!seeMoreOpened
+                ? postData.slice(0, 500)
+                : postDataWithHyperLink}
             </div>
             <div style={moreStyle} onClick={onToggleSeeMore}>
               {!seeMoreOpened ? '... 긴 글 더 보기' : '긴 글 숨기기'}
             </div>
           </>
         : <>
-            {postData && postData.split(/(#[^\s#]+)/g).map((v) => {
-              if (v.match(/(#[^\s#]+)/)) {
-                return (
-                  <Link
-                    href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }}
-                    as={`/hashtag/${v.slice(1)}`}
-                    prefetch={false}
-                    key={v}
-                  >
-                    <a>{v}</a>
-                  </Link>
-                );
-              }
-              return v;
-            })}
+            {postDataWithHyperLink}
           </>
       }
     </div>
