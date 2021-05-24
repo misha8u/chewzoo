@@ -1,42 +1,28 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useCallback } from 'react';
+import { frontkUrl } from '../../config/config';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { Col, List, Row, Divider, Badge, Modal, message } from 'antd';
+import { Col, Row, Badge, message } from 'antd';
 import { QuestionCircleTwoTone, QuestionCircleOutlined, 
   ExclamationCircleTwoTone, ExclamationCircleOutlined, 
   MessageOutlined, MessageFilled, BranchesOutlined,
-  FileImageOutlined, FileImageFilled, DeleteOutlined, AlertOutlined } from '@ant-design/icons';
+  LinkOutlined, FileImageFilled, FileImageOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { SHOW_USER_FORM, SHOW_BRANCH_POSTFORM } from '../../reducers/user';
 import { ON_EXCLAMATION_REQUEST, OFF_EXCLAMATION_REQUEST, 
-  ON_QUESTION_REQUEST, OFF_QUESTION_REQUEST, REMOVE_COMMENT_REQUEST } from '../../reducers/post';
+  ON_QUESTION_REQUEST, OFF_QUESTION_REQUEST} from '../../reducers/post';
 
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
-import ChewzooAvatar from '../ChewzooAvatar';
-import moment from 'moment';
-
-moment.locale('ko');
+import CommentList from './CommentList';
 
 const PostCardActionButtons = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [ImageFormOpened, setImageFormOpened] = useState(true);
   const dispatch = useDispatch();
-  const { removeCommentError, onExclamationError, onQuestionError } = useSelector((state) => state.post);
+  const { onExclamationError, onQuestionError } = useSelector((state) => state.post);
   const id = useSelector((state) => state.user.me?.id);
-
-  useEffect(() => {
-    if (removeCommentError) {
-      return (message.error({content: removeCommentError, style: {marginTop: '3vh'}}));
-    }
-  }, [removeCommentError])
-
-  const [commentHover, setCommentHover] = useState(null);
-  const mouseEnter = useCallback((e) => () => {
-    setCommentHover(e); 
-  }, [commentHover]);
-  const mouseLeave = () => setCommentHover(null);
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
@@ -45,6 +31,12 @@ const PostCardActionButtons = ({ post }) => {
   const onToggleImage = useCallback(() => {
     setImageFormOpened((prev) => !prev);
   }, []);
+
+  const onPostURL = useCallback((e) => () => {
+    if (e === post.id) {
+      message.success({content: 'URL 복사!', style: {marginTop: '3vh'}})
+    }
+  }, [post.id]);
 
   const onToggleExclamation = useCallback(() => {
     if (!id) {
@@ -124,32 +116,6 @@ const PostCardActionButtons = ({ post }) => {
       });
   }, [id]);
 
-  const { confirm } = Modal;
-  const onRemoveComment = useCallback((item) => () => {
-    confirm({
-      title: '지울래?',
-      icon: <DeleteOutlined />,
-      okText: 'ㅇㅇ',
-      okType: 'danger',
-      cancelText: 'ㄴㄴ',
-      onOk() {
-        dispatch({
-          type: REMOVE_COMMENT_REQUEST,
-          data: { commentId: item.id },
-        });
-      }
-    })
-  }, []);
-
-  //const onRemoveComment = useCallback((item) => () => {
-  //  dispatch({
-  //      type: REMOVE_COMMENT_REQUEST,
-  //      data: { commentId: item.id },
-  //    })
-  //}, []);
-
-  const CommentList = post.Comments?.slice().sort((a, b) => a.id - b.id);
-
   const ActionButtonIconStyle = {
     fontSize: '19px',
   }
@@ -169,38 +135,12 @@ const PostCardActionButtons = ({ post }) => {
     padding: '1% 1.5% 1% 1.5%',
   }
 
-  const CommentWrapperStyle = {
-    width: '100%',
-    padding: '0px',
-    margin: '5px 0px 5px 0px',
-  }
-
-  const SelectedCommentWrapperStyle = {
-    width: '100%',
-    backgroundColor: '#FEF3F0',
-    padding: '0px',
-    margin: '5px 0px 5px 0px',
-  }
-
-  const CommentStyle = {
-    width: 'calc(100% - 47px)',
-    padding: '0px',
-    marginLeft: '5px',
-  };
-
-  const CommentAuthorStyle = {
-    fontSize: '13px',
-    color: '#ababab',
-  };
-
-  const CommentAvatarStyle = {
-    //margin: '0px 0px 100% 0px'
-  };
-
   const PostImagesStyle = {
     width: '100%',
     padding: '0px'
   }
+
+  const badgePosition = [-1, 17];
 
   return (
     <div>
@@ -214,11 +154,11 @@ const PostCardActionButtons = ({ post }) => {
         <Row>
         <Col xs={12} md={12}>
           {post.Images.length > 0 &&
-            <div style={ leftActionButtonStyle } onClick={onToggleImage}>
+            <div style={ leftActionButtonStyle } onClick={ onToggleImage }>
               <Badge
                 count={post.Images.length}
                 size="small"
-                offset={[1, 20]}
+                offset={ badgePosition }
                 style={{ backgroundColor: '#262626', textAlign: 'center' }}
               >
                 {ImageFormOpened
@@ -230,11 +170,11 @@ const PostCardActionButtons = ({ post }) => {
           }
 
           {id || post.Comments.length > 0 
-            ? <div style={ leftActionButtonStyle } onClick={onToggleComment}>
+            ? <div style={ leftActionButtonStyle } onClick={ onToggleComment }>
               <Badge
                 count={post.Comments?.length}
                 size="small"
-                offset={[1, 20]}
+                offset={ badgePosition }
                 style={{ backgroundColor: '#262626', textAlign: 'center' }}
               >
                 {commentFormOpened
@@ -247,17 +187,22 @@ const PostCardActionButtons = ({ post }) => {
           }
 
           {id &&
-            <div style={ leftActionButtonStyle } onClick={onBranchPostForm}>
+            <div style={ leftActionButtonStyle } onClick={ onBranchPostForm }>
               <Badge
                 count={0}
                 size="small"
-                offset={[1, 20]}
+                offset={ badgePosition }
                 style={{ backgroundColor: '#262626', textAlign: 'center' }}
               >
-              <BranchesOutlined style={ ActionButtonIconStyle } key="branch"/>
+                <BranchesOutlined style={ ActionButtonIconStyle } key="branch"/>
               </Badge>
             </div>
           }
+            <div style={ leftActionButtonStyle } onClick={ onPostURL(post.id) }>
+              <CopyToClipboard text={`${frontkUrl}/post/${post.id}`}>
+                <LinkOutlined style={ ActionButtonIconStyle } key="link"/>
+              </CopyToClipboard>
+            </div>
         </Col>
 
         <Col xs={12} md={12}>
@@ -266,7 +211,7 @@ const PostCardActionButtons = ({ post }) => {
               <Badge
                 count={post.Questioners.length}
                 size="small"
-                offset={[1, 20]}
+                offset={ badgePosition }
                 style={{ backgroundColor: '#0070C0', textAlign: 'center' }}
               >
                 {question
@@ -280,7 +225,7 @@ const PostCardActionButtons = ({ post }) => {
               <Badge
                 count={post.Exclamationers.length}
                 size="small"
-                offset={[1, 20]}
+                offset={ badgePosition }
                 style={{ backgroundColor: '#E13427', textAlign: 'center' }}
               >
                 {exclamation
@@ -293,85 +238,7 @@ const PostCardActionButtons = ({ post }) => {
       </div>
 
       {commentFormOpened && post.Comments.length > 0 && (
-        <div style={ CommentListWrapperStyle } hoverable={false}>
-          <Divider style={{ margin: '0px'}}/>
-          <List
-            itemLayout="horizontal"
-            dataSource={ CommentList }
-            inverted={true}
-            renderItem={(item) => (
-              <List.Item
-                style={commentHover === item.id ? SelectedCommentWrapperStyle : CommentWrapperStyle}
-                onMouseEnter={ mouseEnter(item.id) }
-                onMouseLeave={ mouseLeave }
-              >
-                <div style={CommentAvatarStyle}>
-                  <ChewzooAvatar userId={item.User.id} userAvatar={item.User.avatar} avatarPosition={'comment'}/>
-                </div>
-                <div style={ CommentStyle }>
-                  <div style={ CommentAuthorStyle }>
-                    {item.User.nickname}
-                    <span style={{ fontSize: '10px' }}>
-                      &#160;&#40;
-                        {commentHover === item.id ? moment(item.createdAt).format('YYYY-MM-DD, HH:mm:ss') : moment(item.createdAt).fromNow()}
-                      &#41;
-                    </span>
-                  </div>
-                  <div style={{whiteSpace: 'pre-wrap'}}>
-                    {item.content.split(/(?![^<]*>|[^<>]*<\/(?!(?:p|pre)>))(https?:\/\/[a-z0-9&#=.\/\-?_%A-Z+:]+)/g).map((v) => {
-                      if (v && v.match(/(?![^<]*>|[^<>]*<\/(?!(?:p|pre)>))(https?:\/\/[a-z0-9&#=.\/\-?_%A-Z+:]+)/)) {
-                        return (
-                          <a
-                            href={v}
-                            as={v}
-                            prefetch={false}
-                            key={v}
-                            target='_blank'
-                          >
-                            &#60;URL 이동&#62;
-                          </a>
-                        );
-                      }
-                      return (
-                        v && v.split(/(#[^\s#]+)/g).map((i) => {
-                          if (i && i.match(/(#[^\s#]+)/)) {
-                            return (
-                              <Link
-                                href={{ pathname: '/hashtag', query: { tag: i.slice(1) } }}
-                                as={`/hashtag/${i.slice(1)}`}
-                                prefetch={false}
-                                key={i}
-                              >
-                                <a>{i}</a>
-                              </Link>
-                            )
-                          }
-                          return i
-                        })
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {id
-                  ? <>{commentHover === item.id
-                      ? <>{item.User.id === id
-                          ? <>
-                              <DeleteOutlined ket="delete" onClick={onRemoveComment(item)} style={{ fontSize: '12px', color: '#E13427' }}/>
-                            </>
-                          : <> {/* 아이콘 색을 배경과 동일하게 수정해 배활성화 한 상태 */}
-                              <AlertOutlined key="report" style={{ fontSize: '12px', color: '#FEF3F0' }}/>
-                            </>
-                        }</>
-                      : <div style={{ width: '12px'}}/>
-                    }</>
-                  : <div style={{ width: '12px'}}/>
-                }
-                
-              </List.Item>
-            )}
-          />
-        </div>
+        <CommentList post={post}/>
       )}
 
       {commentFormOpened && id && (

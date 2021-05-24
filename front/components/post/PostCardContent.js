@@ -73,16 +73,16 @@ const PostCardContent = ({ postData, postId }) => {
   
   return(
     <div style={{whiteSpace: 'pre-wrap'}}>
-      {postData && postData.length > 500
+      {postData && postData.length > 350
         ? <>
             <div style={{ position: 'relative'}}>
               {!seeMoreOpened && <div style={moreContentStyle}/>}
               {!seeMoreOpened
-                ? postData.slice(0, 500)
+                ? postData.slice(0, 350)
                 : postDataWithHyperLink}
             </div>
             <div style={moreStyle} onClick={onToggleSeeMore}>
-              {!seeMoreOpened ? '... 긴 글 더 보기' : '긴 글 숨기기'}
+              {!seeMoreOpened ? '... TMI 보기' : 'TMI 숨기기'}
             </div>
           </>
         : <>

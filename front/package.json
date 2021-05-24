@@ -32,6 +32,7 @@
     "pm2": "^4.5.6",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
+    "react-copy-to-clipboard": "^5.0.3",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^17.0.1",
     "react-media": "^1.10.0",
