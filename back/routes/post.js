@@ -345,8 +345,15 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
     const post = await Post.findOne({
       where: { id: req.params.postId },
     });
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
     if (!post) {
       return res.status(403).send('댓글을 어디 달려고?');
+    }
+    if (hashtags) {
+      const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+        where: { name: tag.slice(1).toLowerCase() },
+      })));
+      await post.addHashtags(result.map((v) => v[0]));
     }
     const comment = await Comment.create({
       content: req.body.content,
@@ -370,13 +377,23 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
 router.delete('/comment/:commentId', isLoggedIn, async (req, res, next) => {
   try {
     const comment = await Comment.findOne({
-      where: { 
+      where: {
         id: req.params.commentId,
         UserId: req.user.id,
       },
     });
+    const post = await Post.findOne({
+      where: { id: comment.PostId },
+    });
+    const hashtags = comment.content.match(/#[^\s#]+/g);
     if (!comment) {
       res.status(403).send('무슨 댓글을 지우려고?');
+    }
+    if (hashtags) {
+      const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+        where: { name: tag.slice(1).toLowerCase() },
+      })));
+      await post.removeHashtags(result.map((v) => v[0]));
     }
     await comment.destroy({ id: req.params.commentId });
     res.status(200).json({ CommentId: comment.id, PostId: comment.PostId });

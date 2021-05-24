@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import { backUrl } from '../config/config';
 
 import { Input, Button, Row, Col, Divider } from 'antd';
-import { LogoutOutlined, SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined } from '@ant-design/icons';
 import Modal from 'antd/lib/modal/Modal';
 
 import useInput from '../hooks/useInput';
@@ -124,11 +124,9 @@ const Profile = () => {
     backgroundColor: '#FEF3F0'
   }
 
-  const logoutButtonStyle = {
-    textAlign: 'right',
-    fontSize: '25px',
+  const bottomButtonStyle = {
+    width: '100%',  
     color: '#E13427',
-    fontWeight: 'bold',
     padding: '0px 6px 0px 0px'
   }
 
@@ -155,22 +153,15 @@ const Profile = () => {
       onCancel={ handleCancel }
       footer={ null }
     >
-      {showUserForm === String('my') 
+      {showUserForm === String('my') //나의 프로필 보기
         ? <>
             <Row>
-                <Col xs={21} md={18}>
-                  <Row>
-                    <Col style={{ cursor: 'pointer' }} onClick={ onToggleAvatar }>
-                      <ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'post'} disabledClick={true}/>
-                    </Col>
-                    <Col style={ nicknameStyle } onClick={ onToggleChangeNickname }>
-                      {me.nickname}
-                    </Col>
-                  </Row>
-                </Col>
-                <Col style={ logoutButtonStyle } xs={3} md={6}>
-                  <LogoutOutlined onClick={ onLogout } loading={ logOutLoading }/>
-                </Col>
+              <Col style={{ cursor: 'pointer' }} onClick={ onToggleAvatar }>
+                <ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'post'} disabledClick={true}/>
+              </Col>
+              <Col style={ nicknameStyle } onClick={ onToggleChangeNickname }>
+                {me.nickname}
+              </Col>
             </Row>
 
             {avatarFormOpened &&
@@ -209,10 +200,10 @@ const Profile = () => {
 
             <Row style={{ textAlign: 'center' }}>
               <Col md={8} xs={8} key="message"><a onClick={ onMySpeech }>뱉은 말<br />{me.Posts.length}</a></Col>
-              <Col md={8} xs={8} key="favorite" style={followingListOpened && SelectedFollowListStyle}
-              ><a onClick={ onFollowingList }>주는 관심<br />{me.Followings.length}</a></Col>
-              <Col md={8} xs={8} key="fans" style={followerListOpened && SelectedFollowListStyle}
-              ><a onClick={ onFollowerList }>받는 관심<br />{me.Followers.length}</a></Col>
+              <Col md={8} xs={8} key="favorite" style={followingListOpened && SelectedFollowListStyle}>
+                <a onClick={ onFollowingList }>주는 관심<br />{me.Followings.length}</a></Col>
+              <Col md={8} xs={8} key="fans" style={followerListOpened && SelectedFollowListStyle}>
+                <a onClick={ onFollowerList }>받는 관심<br />{me.Followers.length}</a></Col>
             </Row>
 
             {followerListOpened &&
@@ -233,23 +224,22 @@ const Profile = () => {
               </>
             }
 
+            <Divider style={{ margin: '12px 0px 12px 0px' }}/>
+
+            <Row>
+              <Button style={ bottomButtonStyle } onClick={ onLogout } loading={ logOutLoading }>LogOUT</Button>
+            </Row>
+
           </>
         : <>
             <>
               <Row>
-                  <Col xs={21} md={18}>
-                    <Row>
-                      <Col style={{ cursor: 'pointer' }}>
-                        <ChewzooAvatar userId={(userInfo || me).id} userAvatar={(userInfo || me).avatar} avatarPosition={'post'} disabledClick={true}/>
-                      </Col>
-                      <Col style={ nicknameStyle }>
-                        {(userInfo || me).nickname}
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col style={ logoutButtonStyle } xs={3} md={6}>
-                    <FollowButton otherUserId={Number((userInfo || me).id)}/>
-                  </Col>
+                <Col style={{ cursor: 'pointer' }}>
+                  <ChewzooAvatar userId={(userInfo || me).id} userAvatar={(userInfo || me).avatar} avatarPosition={'post'} disabledClick={true}/>
+                </Col>
+                <Col style={ nicknameStyle }>
+                  {(userInfo || me).nickname}
+                </Col>
               </Row>
 
               <Divider style={{ margin: '12px 0px 12px 0px' }}/>
@@ -257,6 +247,10 @@ const Profile = () => {
                 <Col md={8} xs={8} key="message"><a onClick={ onUserSpeech }>하신 말씀<br />{Number((userInfo || me).Posts)}</a></Col>
                 <Col md={8} xs={8} key="favorite">주는 관심<br />{Number((userInfo || me).Followings)}</Col>
                 <Col md={8} xs={8} key="fans">받는 관심<br />{Number((userInfo || me).Followers)}</Col>
+              </Row>
+              <Divider style={{ margin: '12px 0px 12px 0px' }}/>
+              <Row>
+                <FollowButton otherUserId={Number((userInfo || me).id)} />
               </Row>
             </>
           </>}

@@ -5,7 +5,7 @@ import Router from 'next/router';
 
 import Media from 'react-media';
 import { Col, Row, Input, Button, message } from 'antd';
-import { MenuOutlined, LoginOutlined, EditFilled, CheckOutlined, UserAddOutlined } from '@ant-design/icons'
+import { MenuOutlined, CheckOutlined } from '@ant-design/icons'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { SHOW_USER_FORM, SHOW_CHEWZOO_SUBMENU, SHOW_POSTFORM, SIGN_UP_SUBMIT_TRUE } from '../reducers/user';
@@ -197,8 +197,7 @@ const AppLayout = ({ children, pageType }) => {
                       </Row>
                     : <Link href="/signup" prefetch={false}>
                         <Button style={ JoinButtonStyle }>
-                          {/*jOIN*/}
-                          <UserAddOutlined />
+                          jOIN
                         </Button>
                       </Link>
                   }
@@ -214,11 +213,10 @@ const AppLayout = ({ children, pageType }) => {
               : <>
                   {me
                     ? <Button type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
-                        <EditFilled/>
+                        sPEAK
                       </Button>
                     : <Button type={'primary'} style={ WriterButtonStyle } onClick={ onUserForm }>
-                        {/*LogIN*/}
-                        <LoginOutlined/>
+                        LogIN
                       </Button>
                   }
                 </>
