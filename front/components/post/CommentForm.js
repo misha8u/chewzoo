@@ -30,7 +30,7 @@ const CommentForm = ({ post }) => {
 
   const onSubmitComment = useCallback(() => {
     if (!commentText || !commentText.trim()) {
-      return message.error({content: '할 말 없어?', style: {marginTop: '3vh'}});
+      return message.error({content: '쓸 거 없어?', style: {marginTop: '3vh'}});
     }
     return dispatch({
       type: ADD_COMMENT_REQUEST,
@@ -46,9 +46,9 @@ const CommentForm = ({ post }) => {
           <Input.TextArea 
             rows={1}
             value={commentText}
-            placeholder="100자 이내로 짧게"
+            placeholder="200자 이내로 짧게"
             onChange={onChangeCommentText}
-            maxLength={100}
+            maxLength={200}
             style={{ margin: '0px 0px 16px 5px', width: 'calc(85% - 35px)' }}
             autoSize={{ minRows: 1, maxRows: 3 }}
             />

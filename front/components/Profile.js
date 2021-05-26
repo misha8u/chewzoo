@@ -199,7 +199,7 @@ const Profile = () => {
             <Divider style={{ margin: '12px 0px 12px 0px' }}/>
 
             <Row style={{ textAlign: 'center' }}>
-              <Col md={8} xs={8} key="message"><a onClick={ onMySpeech }>뱉은 말<br />{me.Posts.length}</a></Col>
+              <Col md={8} xs={8} key="message"><a onClick={ onMySpeech }>쓴 글<br />{me.Posts.length}</a></Col>
               <Col md={8} xs={8} key="favorite" style={followingListOpened && SelectedFollowListStyle}>
                 <a onClick={ onFollowingList }>주는 관심<br />{me.Followings.length}</a></Col>
               <Col md={8} xs={8} key="fans" style={followerListOpened && SelectedFollowListStyle}>
@@ -227,7 +227,7 @@ const Profile = () => {
             <Divider style={{ margin: '12px 0px 12px 0px' }}/>
 
             <Row>
-              <Button style={ bottomButtonStyle } onClick={ onLogout } loading={ logOutLoading }>LogOUT</Button>
+              <Button style={ bottomButtonStyle } onClick={ onLogout } loading={ logOutLoading }>로그아웃</Button>
             </Row>
 
           </>
@@ -244,7 +244,7 @@ const Profile = () => {
 
               <Divider style={{ margin: '12px 0px 12px 0px' }}/>
               <Row style={{ textAlign: 'center' }}>
-                <Col md={8} xs={8} key="message"><a onClick={ onUserSpeech }>하신 말씀<br />{Number((userInfo || me).Posts)}</a></Col>
+                <Col md={8} xs={8} key="message"><a onClick={ onUserSpeech }>쓴 글<br />{Number((userInfo || me).Posts)}</a></Col>
                 <Col md={8} xs={8} key="favorite">주는 관심<br />{Number((userInfo || me).Followings)}</Col>
                 <Col md={8} xs={8} key="fans">받는 관심<br />{Number((userInfo || me).Followers)}</Col>
               </Row>

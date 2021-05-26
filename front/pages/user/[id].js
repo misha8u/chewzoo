@@ -106,7 +106,7 @@ const User = () => {
             <Empty
               image = {`${backUrl}/resource/noposts.png`}
               description={
-                <><span style={{ fontWeight: 'bold' }}>{userInfo.nickname}</span><span> 주주님은 <br /> 하신 말씀이 없네..</span></>
+                <><span style={{ fontWeight: 'bold' }}>{userInfo.nickname}</span><span> 주주님은 <br /> 쓰신 글이 없네..</span></>
               }
               style={{ marginTop: '50px'}}
             >

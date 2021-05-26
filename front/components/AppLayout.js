@@ -197,7 +197,7 @@ const AppLayout = ({ children, pageType }) => {
                       </Row>
                     : <Link href="/signup" prefetch={false}>
                         <Button style={ JoinButtonStyle }>
-                          jOIN
+                          가입
                         </Button>
                       </Link>
                   }
@@ -213,10 +213,10 @@ const AppLayout = ({ children, pageType }) => {
               : <>
                   {me
                     ? <Button type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
-                        sPEAK
+                        글쓰기
                       </Button>
                     : <Button type={'primary'} style={ WriterButtonStyle } onClick={ onUserForm }>
-                        LogIN
+                        로그인
                       </Button>
                   }
                 </>

@@ -39,7 +39,7 @@ const PostContentForm = ({pageType}) => {
 
   const onSubmitForm = useCallback(() => {
     if (!postText || !postText.trim()) {
-      return message.error({content: '할 말 없어?', style: {marginTop: '3vh'}});
+      return message.error({content: '쓸 거 없어?', style: {marginTop: '3vh'}});
     }    
     const formData = new FormData();
     imagePaths.forEach((p) => {

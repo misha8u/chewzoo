@@ -45,7 +45,7 @@ const BranchPostContentForm = ({pageType}) => {
 
   const onSubmitForm = useCallback(() => {
     if (!postText || !postText.trim()) {
-      return message.error({content: '할 말 없어?', style: {marginTop: '3vh'}});
+      return message.error({content: '쓸 거 없어?', style: {marginTop: '3vh'}});
     }
     if (pageType === 'singlepost' || pageType === 'userpost') {
       return(
@@ -128,8 +128,8 @@ const BranchPostContentForm = ({pageType}) => {
           <Row style={{ margin: '10px 0px 10px 0px' }}>
             <div style={ nicknameStyle }>
               {branchPost.UserId != id && branchPost.User
-                ? branchPost.User.nickname + '의 말에 대해서..'
-                : '내가 했던 말에 대해서..'
+                ? branchPost.User.nickname + '의 글에 대해서..'
+                : '내가 썼던 글에 대해서..'
               }
             </div>
           </Row>
@@ -181,7 +181,7 @@ const BranchPostContentForm = ({pageType}) => {
       </Form>
 
       <Divider orientation="left" plain style={{ margin: '16px 0px 0px 0px'}}>
-        가지 쳐서 말할 근본
+        가지 쳐서 쓸 원본
         {branchFormOpened
           ? <EyeInvisibleOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
           : <EyeOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
