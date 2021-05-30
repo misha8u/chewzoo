@@ -3,7 +3,9 @@ import { Form, Input, Button, Tooltip, Card, Col, Row, message, Divider } from '
 import { CheckOutlined, FileImageOutlined, FundOutlined, 
   NotificationFilled, NotificationOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import TextLoop from "react-text-loop";
 
+import Link from 'next/link';
 import Router from 'next/router';
 import useInput from '../../hooks/useInput'
 import PostImages from '../post/PostImages';
@@ -114,12 +116,6 @@ const BranchPostContentForm = ({pageType}) => {
     cursor: 'pointer'
   }
 
-  const nicknameStyle = {
-    fontWeight: 'bold',
-    fontSize: '18px',
-    position: 'relative'
-  };
-
   return(
     <>
       <Row>
@@ -131,12 +127,19 @@ const BranchPostContentForm = ({pageType}) => {
           onFinish={onSubmitForm}>
           <Form.Item>
             <Row style={{ margin: '10px 0px 10px 0px' }}>
-              <div style={ nicknameStyle }>
-                {branchPost.UserId != id && branchPost.User
-                  ? branchPost.User.nickname + '의 글에 대해서..'
-                  : '내가 썼던 글에 대해서..'
-                }
-              </div>
+            <TextLoop>
+              <span>🏷#종목이름 #테마종류 공백, 기호 ㄴㄴ</span>
+              <span>📈차트 사진을 첨부하는 것도 좋아~</span>
+              <span>☕커피 한 잔 선물하는 거 어때?
+                <Link href={"https://open.kakao.com/me/chewzoo"} prefetch={false}>
+                  <a> (클릭)</a>
+                </Link>
+              </span>
+              <span>🪁어떤 종목이 올라갈까?</span>
+              <span>💡#투자생각 해시태그로 의견을 나눠봐!</span>
+              <span>📰꼭 알아야할 이슈, 뉴스가 있어?</span>
+              <span>📉혹시... 물렸어..?</span>
+            </TextLoop>
             </Row>
 
             <Input.TextArea maxLength={5000} 
@@ -187,7 +190,10 @@ const BranchPostContentForm = ({pageType}) => {
         </Form>
 
         <Divider orientation="left" plain style={{ margin: '16px 0px 0px 0px'}}>
-          가지 쳐서 쓸 원본
+          {branchPost.UserId != id && branchPost.User
+            ? branchPost.User.nickname + '의 글'
+            : '내가 썼던 글'
+          }
           {branchFormOpened
             ? <EyeInvisibleOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
             : <EyeOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />

@@ -101,7 +101,7 @@ const AppLayout = ({ children, pageType }) => {
     margin: '6.5px 5px 5px 5px',
     verticalAlign: 'middle',
     width: 'calc(100% - 20px)',
-    fontSize: '20px',
+    fontSize: '18px',
     padding: '0px',
     fontWeight: 'bold'
   };
@@ -111,7 +111,7 @@ const AppLayout = ({ children, pageType }) => {
     margin: '6.5px 5px 5px 5px',
     verticalAlign: 'middle',
     width: 'calc(100% - 20px)',
-    fontSize: '20px',
+    fontSize: '18px',
     padding: '0px',
     fontWeight: 'bold',
     color: '#E13427',
@@ -196,7 +196,7 @@ const AppLayout = ({ children, pageType }) => {
                         </Col>
                       </Row>
                     : <Link href="/signup" prefetch={false}>
-                        <Button style={ JoinButtonStyle }>
+                        <Button shape="round" style={ JoinButtonStyle }>
                           가입
                         </Button>
                       </Link>
@@ -212,10 +212,10 @@ const AppLayout = ({ children, pageType }) => {
                 </Button>
               : <>
                   {me
-                    ? <Button type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
+                    ? <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
                         글쓰기
                       </Button>
-                    : <Button type={'primary'} style={ WriterButtonStyle } onClick={ onUserForm }>
+                    : <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onUserForm }>
                         로그인
                       </Button>
                   }

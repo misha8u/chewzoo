@@ -4,6 +4,7 @@ import { AlertOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { REMOVE_POST_REQUEST, REPORT_POST_REQUEST } from '../../reducers/post';
+import { SHOW_USER_FORM } from '../../reducers/user';
 
 import useInput from '../../hooks/useInput';
 import ChewzooAvatar from '../ChewzooAvatar';
@@ -91,6 +92,30 @@ const PostCardAuthor = ({ post }) => {
     setReportText('');
   }, [reportContent, reportText, id]);
 
+  const onUserForm = useCallback(() => {
+    const userId = Number(post.User.id);
+    if (id) {
+      if (id === userId) {
+        const formType = String('my')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType }
+        });
+      } else {
+        const formType = String('other')
+        return dispatch({
+          type: SHOW_USER_FORM,
+          data: { formType, userId }
+        });
+      }
+    } else {
+      const formType = String('login')
+      return dispatch({
+        type: SHOW_USER_FORM,
+        data: { formType }
+      });
+    }
+  },[id, post.User.id]);
 
   const nicknameStyle = {
     marginLeft: '5px',
@@ -98,6 +123,7 @@ const PostCardAuthor = ({ post }) => {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden', 
+    cursor: 'pointer',
   };
 
   const momentStyle = {
@@ -131,7 +157,7 @@ const PostCardAuthor = ({ post }) => {
             <ChewzooAvatar userId={post.User.id} userAvatar={post.User.avatar} avatarPosition={'post'}/>
           </Col>
           <Col style={{ width: 'calc(100% - 45px)' }}>
-            <Row style={ nicknameStyle }>{post.User.nickname}</Row>
+            <Row onClick={ onUserForm } style={ nicknameStyle }>{post.User.nickname}</Row>
             <Row style={ momentStyle }>
               {authorHover ? moment(post.createdAt).format('YYYY-MM-DD, HH:mm:ss') : moment(post.createdAt).fromNow()}
             </Row>

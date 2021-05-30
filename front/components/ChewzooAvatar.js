@@ -38,6 +38,7 @@ const ChewzooAvatar = ({ userId, userAvatar, avatarPosition, disabledClick }) =>
     height: '30px',
     border: '1px solid #F0F0F0',
     borderRadius: '15%',
+    cursor: 'pointer',
   };
 
   const postAvatarStyle ={
@@ -45,6 +46,7 @@ const ChewzooAvatar = ({ userId, userAvatar, avatarPosition, disabledClick }) =>
     height: '40px',
     border: '1px solid #F0F0F0',
     borderRadius: '15%',
+    cursor: 'pointer',
   };
 
   return (
@@ -53,10 +55,9 @@ const ChewzooAvatar = ({ userId, userAvatar, avatarPosition, disabledClick }) =>
         onClick={ onUserForm }
         src={`${backUrl}/${userAvatar}`}
         style={avatarPosition === 'comment'
-            ? commentAvatarStyle
-            : postAvatarStyle
-          }
-          
+                ? commentAvatarStyle
+                : postAvatarStyle
+              }
       />
     </>
   )

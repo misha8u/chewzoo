@@ -78,28 +78,21 @@ const Home = () => {
     //background: '#FFFFFF',
   }
 
-  const renderThumb = ({ style, ...props }) => {
-    const thumbStyle = {
-      borderRadius: 6,
-      backgroundColor: '#E13427'
-    };
-    return <div style={{ ...style, ...thumbStyle }} {...props} />;
-  };
+  //const renderThumb = ({ style, ...props }) => {
+  //  const thumbStyle = {
+  //    borderRadius: 6,
+  //    backgroundColor: '#E13427'
+  //  };
+  //  return <div style={{ ...style, ...thumbStyle }} {...props} />;
+  //};
 
-  const CustomScrollbars = props => (
-    <Scrollbars
-      renderThumbHorizontal={renderThumb}
-      renderThumbVertical={renderThumb}
-      {...props}
-    />
-  );
-
-  const [scrollTopValue, setScrollTopValue] = useState(null)
-
-  const handleUpdate = useCallback((e) => {
-    // /setScrollTopValue(e),
-    console.log(e)
-  },[]);
+  //const CustomScrollbars = props => (
+  //  <Scrollbars
+  //    renderThumbHorizontal={renderThumb}
+  //    renderThumbVertical={renderThumb}
+  //    {...props}
+  //  />
+  //);
 
   return (
     <AppLayout>
