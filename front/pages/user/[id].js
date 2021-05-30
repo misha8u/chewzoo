@@ -66,10 +66,7 @@ const User = () => {
   const PostContainerCenterStyle = {
     flex: '1',
     background: '#FAFAFA',
-    overflowY: 'auto',
-    webkitScrollbar: {
-      width: '100px',
-    }
+    overflowY: 'auto'
   }
 
   const PostContainerSideStyle = {

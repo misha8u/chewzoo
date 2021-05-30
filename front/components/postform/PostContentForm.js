@@ -22,8 +22,7 @@ const PostContentForm = ({pageType}) => {
 
   useEffect(() => {
     if (addPostDone) {
-      setPostText(''),
-      onClose();
+      setPostText('')
     }
   }, [addPostDone]);
 
@@ -52,13 +51,17 @@ const PostContentForm = ({pageType}) => {
           type: ADD_POST_REQUEST,
           data: formData,
         }),
+        onClose(),
         Router.replace('/')
       )
     } else {
-      return dispatch({
+      return (
+        dispatch({
         type: ADD_POST_REQUEST,
         data: formData,
-      })
+        }),
+        onClose()
+      )
     }
   }, [postText, imagePaths]);
 
@@ -107,62 +110,72 @@ const PostContentForm = ({pageType}) => {
   };
   
   return(
-    <Form
-      encType="multipart/form-data" 
-      onFinish={onSubmitForm}>
-      <Form.Item>
-        <Row style={{ margin: '10px 0px 10px 0px' }}>
-          <Col><ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'post'} disabledClick={true}/></Col>
-          <Col style={ nicknameStyle }>{me.nickname}</Col>
-        </Row>
+    <>
+    <Row>
+    <Col xs={1} md={7}/>
 
-        <Input.TextArea maxLength={5000} 
-          autoSize={{ minRows: 3, maxRows: 8 }}
-          value={ postText }
-          onChange={ onChangePostText }/>
-        <div style={{ textAlign: 'right' }}>{postText.length} / 5000</div>
+    <Col xs={22} md={10}>
+      <Form
+        encType="multipart/form-data" 
+        onFinish={onSubmitForm}>
+        <Form.Item>
+          <Row style={{ margin: '10px 0px 10px 0px' }}>
+            <Col><ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'post'} disabledClick={true}/></Col>
+            <Col style={ nicknameStyle }>{me.nickname}</Col>
+          </Row>
 
-        <input type="file" name="image" hidden multiple 
-          ref={ imageInput } onChange={ onChangeImages }/>
-        <Button
-          style={ leftButtonStyle }
-          onClick={ onClickImageUpload }>
-          <FileImageOutlined />
-        </Button>
-        
-        <Tooltip title='준비 중' placement="bottom">
-        <Button
-          style={ leftButtonStyle }>
-            <FundOutlined />
-        </Button>
-        </Tooltip>
+          <Input.TextArea maxLength={5000} 
+            autoSize={{ minRows: 3 }}
+            value={ postText }
+            placeholder={'#종목이름 으로 해시태그를 걸어봐!'}
+            onChange={ onChangePostText }/>
+          <div style={{ textAlign: 'right' }}>{postText.length} / 5000</div>
 
-        <Button type="primary"
-          style={ rightButtonStyle }
-          htmlType="submit"
-          loading={ addPostLoading }>
-          <CheckOutlined />
-        </Button>
+          <input type="file" name="image" hidden multiple 
+            ref={ imageInput } onChange={ onChangeImages }/>
+          <Button
+            style={ leftButtonStyle }
+            onClick={ onClickImageUpload }>
+            <FileImageOutlined />
+          </Button>
 
-        <Tooltip title='준비 중' placement="bottom">
-        <Button
-          style={ rightButtonStyle }
-          onClick={ onToggleNotification }>
-            {Notification
-            ? <NotificationFilled style = {{ color: '#E13427' }}/>
-            : <NotificationOutlined />
-            }
-        </Button>
-        </Tooltip>
+          <Tooltip title='준비 중' placement="bottom">
+          <Button
+            style={ leftButtonStyle }>
+              <FundOutlined />
+          </Button>
+          </Tooltip>
 
-        {imagePaths.length > 0 &&
-          <Card.Grid style={ PostCardImagesStyle }>
-            <PostImages images={ imagePaths } postForm={true}/>
-          </Card.Grid>
-        }
-      </Form.Item>
-    </Form>
+          <Button type="primary"
+            style={ rightButtonStyle }
+            htmlType="submit"
+            loading={ addPostLoading }>
+            <CheckOutlined />
+          </Button>
 
+          <Tooltip title='준비 중' placement="bottom">
+          <Button
+            style={ rightButtonStyle }
+            onClick={ onToggleNotification }>
+              {Notification
+              ? <NotificationFilled style = {{ color: '#E13427' }}/>
+              : <NotificationOutlined />
+              }
+          </Button>
+          </Tooltip>
+
+            {imagePaths.length > 0 &&
+              <Card.Grid style={ PostCardImagesStyle }>
+                <PostImages images={ imagePaths } postForm={true}/>
+              </Card.Grid>
+          }
+        </Form.Item>
+      </Form>
+    </Col>
+    
+    <Col xs={1} md={7}/>
+    </Row>
+    </>
   );
 };
 

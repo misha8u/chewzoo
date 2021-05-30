@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
 import Head from 'next/head';
 import { backUrl } from '../config/config';
-
 import { Col } from 'antd';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import PostCard from '../components/post/PostCard';
 import AppLayout from '../components/AppLayout';
@@ -21,7 +21,6 @@ const Home = () => {
   const postDiv = useRef();
 
   //react virtualized 반영해봅니다.
-  //.scrollHeight * 0.5 으로 처리하는 방안은 상단 포스트에선 너무 늦게,
   // 중후반 포스트에선 너무 빨리 반응하는 경향이 있습니다.
 
   useEffect(() => {
@@ -69,9 +68,6 @@ const Home = () => {
     flex: '1',
     background: '#FAFAFA',
     overflowY: 'auto',
-    webkitScrollbar: {
-      width: '100px',
-    }
   }
 
   const PostContainerSideStyle = {
@@ -81,7 +77,30 @@ const Home = () => {
     //alignItems: 'center',
     //background: '#FFFFFF',
   }
-  
+
+  const renderThumb = ({ style, ...props }) => {
+    const thumbStyle = {
+      borderRadius: 6,
+      backgroundColor: '#E13427'
+    };
+    return <div style={{ ...style, ...thumbStyle }} {...props} />;
+  };
+
+  const CustomScrollbars = props => (
+    <Scrollbars
+      renderThumbHorizontal={renderThumb}
+      renderThumbVertical={renderThumb}
+      {...props}
+    />
+  );
+
+  const [scrollTopValue, setScrollTopValue] = useState(null)
+
+  const handleUpdate = useCallback((e) => {
+    // /setScrollTopValue(e),
+    console.log(e)
+  },[]);
+
   return (
     <AppLayout>
         <Head>
@@ -92,16 +111,16 @@ const Home = () => {
         <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
       </Head>
       <div style={ PostContainerStyle }>
-        <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+        <Col xs={1} md={7} style ={ PostContainerSideStyle }>
         </Col>
         
         <Col style={ PostContainerCenterStyle } ref={postDiv}>
-            {mainPosts.map((c) => (
-              <PostCard post={c} />  
-            ))}
-        </Col>
+          {mainPosts.map((c) => (
+            <PostCard post={c} />  
+          ))}
+        </Col>        
         
-        <Col xs={2} md={7} style ={ PostContainerSideStyle }>
+        <Col xs={1} md={7} style ={ PostContainerSideStyle }>
         </Col>
       </div>
     </AppLayout>

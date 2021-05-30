@@ -26,7 +26,7 @@ const PostCardContent = ({ postData, postId }) => {
           href={v}
           as={v}
           prefetch={false}
-          key={v}
+          key={v + `${Math.floor(Math.random())}`}
           target='_blank'
         >
           &#60;URL 이동&#62;

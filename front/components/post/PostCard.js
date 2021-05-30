@@ -27,7 +27,7 @@ const PostCard = ({ post }) => {
 
   const BranchPostContentStyle = {
     width: '100%',
-    padding: '1.5%',
+    padding: '0% 0% 1% 0%',
     fontStyle: 'italic',
     color: '#ababab',
     cursor: 'pointer',
@@ -35,18 +35,20 @@ const PostCard = ({ post }) => {
 
   return (
     <div key={post.id} id={post.id} style={{ padding: '15px 1% 5px 1%' }}>
-      <Card hoverable bodyStyle={{ padding: '0.8px' }}>
+      <Card hoverable={false} bodyStyle={{ padding: '0.8px' }}>
         <Col style={{ padding: '0%', alignContent: 'center' }}>
           <div style={ authorStyle }>
             <PostCardAuthor post={post}/>
           </div>
-          {post.BranchId && post.Branch &&
-            <div style={ BranchPostContentStyle } onClick={ toOrigin }>
-              <BranchPostContent postData={post.Branch.content}/>
-            </div>
-          }
           <div style={ PostCardContentStyle }>
+            {post.BranchId && post.Branch &&
+              <div style={ BranchPostContentStyle } onClick={ toOrigin }>
+                <BranchPostContent postData={post.Branch.content}/>
+              </div>
+            }
+            <div>
             <PostCardContent postData={post.content} postId={post.id}/>
+            </div>
           </div>
         </Col>
 

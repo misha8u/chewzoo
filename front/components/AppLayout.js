@@ -147,15 +147,15 @@ const AppLayout = ({ children, pageType }) => {
     <div>
       <div style={ MenuBarStyle }>
         <Row>
-          <Col xs={2} md={7}/>
+          <Col xs={1} md={7}/>
 
-          <Col xs={10} md={5}>
+          <Col xs={11} md={5}>
             <Link href="/" key="home">
               <a style={ MenuHomeStyle }>cHEWzOO</a>
             </Link>
           </Col>
 
-          <Col xs={10} md={5}>
+          <Col xs={11} md={5}>
             <MenuOutlined style={ MenuIconStyle } onClick={ onChewzooSubMenu }/>
               <Media queries={{small: "(max-width: 767px)"}}>
                 {(matches) => matches.small
@@ -170,7 +170,7 @@ const AppLayout = ({ children, pageType }) => {
               </Media>
           </Col>
 
-          <Col xs={2} md={7}/>
+          <Col xs={1} md={7}/>
         </Row>
       </div>
 
@@ -180,9 +180,9 @@ const AppLayout = ({ children, pageType }) => {
 
       <div style={ MenuBarStyle }>
         <Row>
-          <Col xs={2} md={7}/>
+          <Col xs={1} md={7}/>
 
-          <Col xs={10} md={5}>
+          <Col xs={11} md={5}>
             {pageType === 'signup'
               ? <></>
               : <>
@@ -205,7 +205,7 @@ const AppLayout = ({ children, pageType }) => {
             }
           </Col>
 
-          <Col xs={10} md={5}>
+          <Col xs={11} md={5}>
             {pageType === 'signup'
               ? <Button type={'primary'} style={ WriterButtonStyle } onClick={ onSignUpSubmit } loading={signUpLoading}>
                   <CheckOutlined />
@@ -223,7 +223,7 @@ const AppLayout = ({ children, pageType }) => {
             }
           </Col>
 
-          <Col xs={2} md={7}/>
+          <Col xs={1} md={7}/>
         </Row>
       </div>
 

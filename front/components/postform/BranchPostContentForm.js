@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import { Form, Input, Button, Tooltip, Card, Row, message, Divider } from 'antd';
+import { Form, Input, Button, Tooltip, Card, Col, Row, message, Divider } from 'antd';
 import { CheckOutlined, FileImageOutlined, FundOutlined, 
   NotificationFilled, NotificationOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -24,8 +24,7 @@ const BranchPostContentForm = ({pageType}) => {
 
   useEffect(() => {
     if (branchDone) {
-      setPostText(''),
-      onClose();
+      setPostText('')
     }
   }, [branchDone]);
 
@@ -53,6 +52,7 @@ const BranchPostContentForm = ({pageType}) => {
           type: BRANCH_REQUEST,
           data: { content: postText, image: imagePaths, postId: branchPost.id },
         }),
+        onClose(),
         Router.replace('/')
       )
     } else {
@@ -60,7 +60,8 @@ const BranchPostContentForm = ({pageType}) => {
         dispatch({
           type: BRANCH_REQUEST,
           data: { content: postText, image: imagePaths, postId: branchPost.id },
-        })
+        }),
+        onClose()
       )
     }
   }, [postText, imagePaths, branchPost.id]);
@@ -121,87 +122,96 @@ const BranchPostContentForm = ({pageType}) => {
 
   return(
     <>
-      <Form
-        encType="multipart/form-data" 
-        onFinish={onSubmitForm}>
-        <Form.Item>
-          <Row style={{ margin: '10px 0px 10px 0px' }}>
-            <div style={ nicknameStyle }>
-              {branchPost.UserId != id && branchPost.User
-                ? branchPost.User.nickname + '의 글에 대해서..'
-                : '내가 썼던 글에 대해서..'
-              }
-            </div>
-          </Row>
+      <Row>
+      <Col xs={1} md={7}/>
 
-          <Input.TextArea maxLength={5000} 
-            autoSize={{ minRows: 3, maxRows: 8 }}
-            value={postText}
-            onChange={onChangePostText} />
-          <div style={{ textAlign: 'right' }}>{postText.length} / 5000</div>
-
-          <input type="file" name="image" hidden multiple ref={imageInput} onChange={onChangeImages}/>
-          <Button
-            style={ leftButtonStyle }
-            onClick={onClickImageUpload}>
-            <FileImageOutlined />
-          </Button>
-
-          <Tooltip title='준비 중' placement="bottom">
-          <Button
-            style={ leftButtonStyle }>
-              <FundOutlined />
-          </Button>
-          </Tooltip>
-
-          <Button type="primary"
-            style={ rightButtonStyle }
-            htmlType="submit"
-            loading={branchLoading}>
-            <CheckOutlined />
-          </Button>
-
-          <Tooltip title='준비 중' placement="bottom">
-          <Button
-            style={ rightButtonStyle }
-            onClick={onToggleNotification}>
-              {Notification
-              ? <NotificationFilled style = {{ color: '#E13427' }}/>
-              : <NotificationOutlined />
-              }
-          </Button>
-          </Tooltip>
-
-          {imagePaths.length > 0 &&
-            <Card.Grid style={ BranchPostCardImagesStyle }>
-              <PostImages images={imagePaths} postForm={true}/>
-            </Card.Grid>
-          }
-        </Form.Item>
-      </Form>
-
-      <Divider orientation="left" plain style={{ margin: '16px 0px 0px 0px'}}>
-        가지 쳐서 쓸 원본
-        {branchFormOpened
-          ? <EyeInvisibleOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
-          : <EyeOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
-        }
-      </Divider>
-
-      {branchFormOpened
-        ? <></>
-        : <>
-            <Row style = { BranchPostContentStyle }>
-              <PostCardContent postData={branchPost.content}/>
+      <Col xs={22} md={10}>
+        <Form
+          encType="multipart/form-data" 
+          onFinish={onSubmitForm}>
+          <Form.Item>
+            <Row style={{ margin: '10px 0px 10px 0px' }}>
+              <div style={ nicknameStyle }>
+                {branchPost.UserId != id && branchPost.User
+                  ? branchPost.User.nickname + '의 글에 대해서..'
+                  : '내가 썼던 글에 대해서..'
+                }
+              </div>
             </Row>
 
-            {branchPost.Images && branchPost.Images.length > 0 && (
-              <div style={ BranchPostCardImagesStyle }>
-                {branchPost.Images[0] && <PostImages images={branchPost.Images}/>}
-              </div>
-            )}
-          </>
-      }
+            <Input.TextArea maxLength={5000} 
+              autoSize={{ minRows: 3 }}
+              placeholder={'#종목이름 으로 해시태그를 걸어봐!'}
+              value={postText}
+              onChange={onChangePostText} />
+            <div style={{ textAlign: 'right' }}>{postText.length} / 5000</div>
+
+            <input type="file" name="image" hidden multiple ref={imageInput} onChange={onChangeImages}/>
+            <Button
+              style={ leftButtonStyle }
+              onClick={onClickImageUpload}>
+              <FileImageOutlined />
+            </Button>
+
+            <Tooltip title='준비 중' placement="bottom">
+            <Button
+              style={ leftButtonStyle }>
+                <FundOutlined />
+            </Button>
+            </Tooltip>
+
+            <Button type="primary"
+              style={ rightButtonStyle }
+              htmlType="submit"
+              loading={branchLoading}>
+              <CheckOutlined />
+            </Button>
+
+            <Tooltip title='준비 중' placement="bottom">
+            <Button
+              style={ rightButtonStyle }
+              onClick={onToggleNotification}>
+                {Notification
+                ? <NotificationFilled style = {{ color: '#E13427' }}/>
+                : <NotificationOutlined />
+                }
+            </Button>
+            </Tooltip>
+
+            {imagePaths.length > 0 &&
+              <Card.Grid style={ BranchPostCardImagesStyle }>
+                <PostImages images={imagePaths} postForm={true}/>
+              </Card.Grid>
+            }
+          </Form.Item>
+        </Form>
+
+        <Divider orientation="left" plain style={{ margin: '16px 0px 0px 0px'}}>
+          가지 쳐서 쓸 원본
+          {branchFormOpened
+            ? <EyeInvisibleOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
+            : <EyeOutlined style={visibleBranchContentButtonStyle} onClick={onToggleBranch} />
+          }
+        </Divider>
+
+        {branchFormOpened
+          ? <></>
+          : <>
+              <Row style = { BranchPostContentStyle }>
+                <PostCardContent postData={branchPost.content}/>
+              </Row>
+
+              {branchPost.Images && branchPost.Images.length > 0 && (
+                <div style={ BranchPostCardImagesStyle }>
+                  {branchPost.Images[0] && <PostImages images={branchPost.Images}/>}
+                </div>
+              )}
+            </>
+        }
+      </Col>
+
+      <Col xs={1} md={7}/>
+      </Row>
     </>
   );
 };

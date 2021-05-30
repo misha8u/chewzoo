@@ -113,10 +113,7 @@ const Signup = () => {
   const SignupContainerCenterStyle = {
     flex: '1',
     background: '#FAFAFA',
-    overflowY: 'auto',
-    webkitScrollbar: {
-      width: '100px',
-    }
+    overflowY: 'auto'
   }
 
   return (

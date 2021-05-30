@@ -26,7 +26,7 @@ const BranchPostContent = ({ postData }) => {
               href={{ pathname: '/hashtag', query: { tag: i.slice(1) } }}
               as={`/hashtag/${i.slice(1)}`}
               prefetch={false}
-              key={i}
+              key={i + `${Math.floor(Math.random())}`}
             >
               <a>{i}</a>
             </Link>

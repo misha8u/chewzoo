@@ -26,11 +26,12 @@ const PostForm = ({ pageType }) => {
         {(matches) => matches.small
           ? <>
               <Drawer
-                placement="right"
+                placement="bottom"
                 closable={false}
                 onClose={onClose}
                 visible={showPostForm || showBranchPostForm}
-                width='75%'
+                height='80%'
+                bodyStyle={{ padding: '0.5%' }}
               >
                 {showPostForm && <PostContentForm pageType={ pageType }/>}
                 {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}
@@ -38,11 +39,12 @@ const PostForm = ({ pageType }) => {
             </>
           : <>
               <Drawer
-                placement="right"
+                placement="bottom"
                 closable={false}
                 onClose={onClose}
                 visible={showPostForm || showBranchPostForm}
-                width='35%'
+                height='50%'
+                bodyStyle={{ padding: '0.5%' }}
               >
                 {showPostForm && <PostContentForm pageType={ pageType }/>}
                 {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}

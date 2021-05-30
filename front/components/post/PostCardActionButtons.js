@@ -121,12 +121,12 @@ const PostCardActionButtons = ({ post }) => {
   }
 
   const leftActionButtonStyle = {
-    margin: '16px 5px 16px 5px',
+    margin: '10px 5px 10px 5px',
     float: 'left',
   }
 
   const rightActionButtonStyle = {
-    margin: '16px 5px 16px 5px',
+    margin: '10px 5px 10px 5px',
     float: 'right',
   }
 
@@ -150,7 +150,7 @@ const PostCardActionButtons = ({ post }) => {
         </div>
       )}
 
-      <div style={{ width: '100%', padding: '0% 1.5% 0% 1.5%' }}>
+      <div style={{ width: '100%', padding: '0% 1.5% 0% 1.5%', borderTop: '1px solid #F0F0F0' }}>
         <Row>
         <Col xs={12} md={12}>
           {post.Images.length > 0 &&
