@@ -102,7 +102,6 @@ const UpdatePostContentForm = ({pageType}) => {
   
   return(
     <>
-      <span>{updatePost.content}</span>
       <Form
         encType="multipart/form-data" 
         onFinish={onSubmitForm}>
