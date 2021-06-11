@@ -1,28 +1,17 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import Media from 'react-media';
 import Router from 'next/router';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { CLOSE_CHEWZOO_SUBMENU } from '../reducers/user';
-
-import { Input, Menu, Drawer, message } from 'antd';
+import { Input, message, Divider, Button } from 'antd'
 import Link from 'next/link';
-import SubMenu from 'antd/lib/menu/SubMenu';
 import useInput from '../hooks/useInput';
+import Tabsshow from '../components/widget/TickerWidget';
 
 const ChewzooSubMenu = () => {
-  const dispatch = useDispatch();
-  const { showChewzooSubMenu } = useSelector((state) => state.user);
   const [searchInput, onChangeSearchInput] = useInput('');
 
-  const onClose = useCallback(() => {
-    dispatch({
-      type: CLOSE_CHEWZOO_SUBMENU,
-    });
-  },[]);
-
   const onProgress = useCallback(() => {
-    message.warning({content: '아직 준비 중..!', style: {marginTop: '3vh'}})
+    message.warning({content: '아직 준비 중..!', style: {marginTop: ';3vh'}})
   },[]);
 
   const onSearch = useCallback(() => {
@@ -33,70 +22,41 @@ const ChewzooSubMenu = () => {
     }
   }, [searchInput]);
 
-  const ChewzooMenuStyle = {
-    fontWeight: 'bold',
-  };
+  const MenuButtonStyle = {
+    margin: '0px 5px 5px 0px',
+  }
 
-  const MyfavoriteStyle = {
-    fontSize: '20px',
+  const MenuSearchStyle = {
+    padding: '0px', marginBottom: '12px', width: '100%'
   };
 
   return (
     <>
-      <Drawer
-        title="ver. alpha 1.0.1"
-        placement="right"
-        closable={false}
-        onClose={onClose}
-        visible={showChewzooSubMenu}
-        bodyStyle={{ padding: '0%' }}
-      >
-        <Media queries={{small: "(max-width: 767px)"}}>
-          {(matches) => matches.small
-          ? <Input.Search 
-              value={ searchInput }
-              onChange={ onChangeSearchInput }
-              onSearch={ onSearch }
-              style={{ padding: '16px' }} 
-              placeholder="내 관종은..?" />
-          : <></>
-          }
-        </Media>
-        <Menu mode="inline">
-          {/* 
-          <SubMenu key="favorite" style={ChewzooMenuStyle}
-            title="관심종목"
-          >
-            <Menu.Item style={MyfavoriteStyle}>관심 산업</Menu.Item>
-            <Menu.Item style={MyfavoriteStyle}>관심 테마</Menu.Item>
-            <Menu.Item style={MyfavoriteStyle}>관심 종목</Menu.Item>
-            <Menu.Item style={MyfavoriteStyle}>관심 종목 설정</Menu.Item>
-          
-          </SubMenu>
-          */}
+      <Tabsshow />
+      <Divider style={{ margin: '12px 0px 12px 0px' }}/>
 
-          <Menu.Item key="wiki" style={ChewzooMenuStyle}>
-              <a onClick={onProgress}>주식위키</a>
-          </Menu.Item>
+      <Media queries={{small: "(max-width: 767px)"}}>
+        {(matches) => matches.small
+        ? <Input.Search 
+            value={ searchInput }
+            onChange={ onChangeSearchInput }
+            onSearch={ onSearch }
+            style={ MenuSearchStyle } 
+            enterButton
+            placeholder="내 관종은..?" />
+        : <></>
+        }
+      </Media>
 
-          <Menu.Item key="debate" style={ChewzooMenuStyle}>
-              <a onClick={onProgress}>주식토론</a>
-          </Menu.Item>
+      <Button shape="round" style={MenuButtonStyle} onClick={onProgress}>
+        📚주식 위키(준비 중)
+      </Button>
+      <Link href={"https://open.kakao.com/me/chewzoo"} prefetch={false}>
+        <Button shape="round" style={MenuButtonStyle}>☕후원과 문의</Button>
+      </Link>
+      <Divider style={{ margin: '12px 0px 12px 0px' }}/>
 
-          <Menu.Item style={ChewzooMenuStyle}>
-              <Link href={"https://open.kakao.com/me/chewzoo"} prefetch={false}>
-              <a>문의,후원</a>
-              </Link>
-          </Menu.Item>
-
-          {/*
-          <Menu.Item style={ChewzooMenuStyle}>
-              <a onClick={onProgress}>개발노트</a>
-          </Menu.Item>
-          */}
-
-        </Menu>
-      </Drawer>
+      <span>알파 1.1.0</span>
     </>
   );
 };

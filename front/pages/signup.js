@@ -119,7 +119,7 @@ const Signup = () => {
   return (
     <AppLayout pageType={'signup'}>
       <Head>
-        <title>회원가입 | cHEWzOO</title>
+        <title>츄주 | 회원 가입</title>
       </Head>
       <div style={ SignupContainerStyle }>
 
@@ -197,7 +197,7 @@ const Signup = () => {
                   <img role="welcome" alt="welcome" src ={`${backUrl}/resource/signupTitle.png`}/>
                 </div>
                 <span>
-                  📈 cHEWzOO(츄주)는 "주식을 씹는다."라는 뜻의 이름을 가진 주식 투자자 커뮤니티입니다.
+                  📈 츄주(cHEWzOO)는 "주식을 씹는다."라는 뜻의 이름을 가진 주식 투자자 커뮤니티입니다.
                 </span><br />
                 <span>
                   🧑‍🤝‍🧑 회원 가입과 개인정보 취급 방침, 서비스 운영 정책을 제외한 cHEWzOO(츄주)의 대부분의 메세지는 반말입니다.

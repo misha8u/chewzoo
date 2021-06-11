@@ -1,18 +1,19 @@
 import React, { useCallback } from 'react';
-import Media from 'react-media';
-import { Drawer } from 'antd';
+import { Divider, Modal } from 'antd';
 import PropTypes from 'prop-types';
+import TextLoop from "react-text-loop";
 
 import { useSelector, useDispatch } from 'react-redux';
+import Link from 'next/link';
 
 import { CLOSE_POSTFORM } from '../../reducers/user';
 import BranchPostContentForm from './BranchPostContentForm'
 import PostContentForm from './PostContentForm'
+import UpdatePostContentForm from './UpdatePostContentForm'
 
 const PostForm = ({ pageType }) => {
-  //PostForm의 Story와 Forecast를 Tabs로 구분하고 각각 js의 코드들을 정리해주세요.
   const dispatch = useDispatch();
-  const { showPostForm, showBranchPostForm } = useSelector((state) => state.user);
+  const { showPostForm, showBranchPostForm, showUpdatePostForm } = useSelector((state) => state.user);
 
   const onClose = useCallback(() => {
     dispatch({
@@ -21,38 +22,34 @@ const PostForm = ({ pageType }) => {
   },[]);
 
   return (
-    <>
-      <Media queries={{small: "(max-width: 767px)"}}>
-        {(matches) => matches.small
-          ? <>
-              <Drawer
-                placement="bottom"
-                closable={false}
-                onClose={onClose}
-                visible={showPostForm || showBranchPostForm}
-                height='80%'
-                bodyStyle={{ padding: '0.5%' }}
-              >
-                {showPostForm && <PostContentForm pageType={ pageType }/>}
-                {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}
-              </Drawer>            
-            </>
-          : <>
-              <Drawer
-                placement="bottom"
-                closable={false}
-                onClose={onClose}
-                visible={showPostForm || showBranchPostForm}
-                height='50%'
-                bodyStyle={{ padding: '0.5%' }}
-              >
-                {showPostForm && <PostContentForm pageType={ pageType }/>}
-                {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}
-              </Drawer>   
-            </>
-        }
-      </Media>
-    </>
+    <Modal
+      closable={ false }
+      onCancel={ onClose }
+      footer={ null }
+      visible={ showPostForm || showBranchPostForm || showUpdatePostForm }
+      bodyStyle={{ padding: '10px' }}
+      width={800}
+    >
+      <TextLoop style={{ marginTop: '12px' }}>
+        <span>🏷공백, 기호 없이 #종목이름 #테마종류 </span>
+        <span>📈차트 사진을 올려도 좋아~</span>
+        <span>☕커피 한 잔 선물하는 거 어때?
+          <Link href={"https://open.kakao.com/me/chewzoo"} prefetch={false}>
+            <a> (클릭)</a>
+          </Link>
+        </span>
+        <span>🪁어떤 종목이 올라갈까?</span>
+        <span>💡#투자생각 해시태그로 의견을 나눠봐!</span>
+        <span>📰꼭 알아야할 이슈, 뉴스가 있어?</span>
+        <span>📉혹시... 물렸어..?</span>
+      </TextLoop>
+
+      <Divider style={{ margin: '12px 0px 12px 0px' }}/>
+
+      {showPostForm && <PostContentForm pageType={ pageType }/>}
+      {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}
+      {showUpdatePostForm && <UpdatePostContentForm pageType={ pageType }/>}
+    </Modal>            
   );
 };
 

@@ -4,11 +4,11 @@ import Link from 'next/link';
 import Router from 'next/router';
 
 import Media from 'react-media';
-import { Col, Row, Input, Button, message } from 'antd';
-import { MenuOutlined, CheckOutlined } from '@ant-design/icons'
+import { Col, Row, Input, Button, message, Popover } from 'antd';
+import { MenuOutlined, CheckOutlined, FormOutlined } from '@ant-design/icons'
 
 import { useSelector, useDispatch } from 'react-redux';
-import { SHOW_USER_FORM, SHOW_CHEWZOO_SUBMENU, SHOW_POSTFORM, SIGN_UP_SUBMIT_TRUE } from '../reducers/user';
+import { SHOW_USER_FORM, SHOW_POSTFORM, SIGN_UP_SUBMIT_TRUE } from '../reducers/user';
 
 import useInput from '../hooks/useInput';
 import LoginForm from './LoginForm';
@@ -24,7 +24,7 @@ const AppLayout = ({ children, pageType }) => {
 
   useEffect(() => {
     if (logInDone) {
-      message.success({content: 'cHEWzOO에 온걸 환영해!', style: {marginTop: '3vh'} })
+      message.success({content: '츄주에 온걸 환영해!', style: {marginTop: '3vh'} })
     }
   }, [logInDone])
 
@@ -50,12 +50,6 @@ const AppLayout = ({ children, pageType }) => {
     }
   },);
 
-  const onChewzooSubMenu = useCallback(()=> {
-    dispatch({
-      type: SHOW_CHEWZOO_SUBMENU,
-    });
-  },);
-
   const onPostForm = useCallback(()=> {
     dispatch({
       type: SHOW_POSTFORM,
@@ -79,7 +73,7 @@ const AppLayout = ({ children, pageType }) => {
   const MenuBarStyle = {
     height: '47px',
     width: '100%',
-    fontSize: '30px',
+    fontSize: '2em',
     fontWeight: 'bold',
     color: '#E13427',
     background: '#FFFFFF',
@@ -88,11 +82,11 @@ const AppLayout = ({ children, pageType }) => {
   };
 
   const MenuHomeStyle = {
-    margin: '6.5px 6px 5px 2.5%',
+    margin: '6.5px 0px 5px 5px',
   };
 
   const MenuIconStyle = {
-    float: 'right',
+    float: 'left',
     margin: '6.5px 6px 5px 5px',
   };
 
@@ -100,28 +94,26 @@ const AppLayout = ({ children, pageType }) => {
     float: 'right',
     margin: '6.5px 5px 5px 5px',
     verticalAlign: 'middle',
-    width: 'calc(100% - 20px)',
-    fontSize: '18px',
+    width: 'calc(100% - 50px)',
+    fontSize: '0.7em',
     padding: '0px',
     fontWeight: 'bold'
-  };
-
-  const JoinButtonStyle = {
-    float: 'left',
-    margin: '6.5px 5px 5px 5px',
-    verticalAlign: 'middle',
-    width: 'calc(100% - 20px)',
-    fontSize: '18px',
-    padding: '0px',
-    fontWeight: 'bold',
-    color: '#E13427',
   };
 
   const MenuSearchStyle = {
     float: 'right',
     margin: '6.5px 6px 5px 5px',
     verticalAlign: 'middle',
-    width: '55%',
+    width: 'calc(100% - 55px)',
+  };
+
+  const UpperMenuButtonStyle = {
+    fontSize: '0.55em',
+    fontWeight: 'bold',
+    padding: '11px 5px 8px 5px',
+    float: 'right',
+    verticalAlign: 'middle',
+    fontWeight: 'normal'
   };
 
   const userInfoStyle = {
@@ -130,17 +122,13 @@ const AppLayout = ({ children, pageType }) => {
     cursor: 'pointer',
     position: 'relative',
     margin: '6.5px 6px 5px 5px',
-    padding: '0px 0px 0px 0px',
-    verticalAlign: 'middle'
+    padding: '0px',
+    float: 'right'
   };
   
   const nicknameStyle = {
     color: '#262626',
-    marginLeft: '5px',
-    width: 'calc(100% - 40px)',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden', 
+    margin: '2px 10px 0px 5px',
   }
 
   return (
@@ -156,18 +144,23 @@ const AppLayout = ({ children, pageType }) => {
           </Col>
 
           <Col xs={11} md={5}>
-            <MenuOutlined style={ MenuIconStyle } onClick={ onChewzooSubMenu }/>
-              <Media queries={{small: "(max-width: 767px)"}}>
-                {(matches) => matches.small
-                  ? <></>
-                  : <Input.Search
-                      value={ searchInput }
-                      onChange={ onChangeSearchInput }
-                      onSearch={ onSearch }
-                      style={ MenuSearchStyle }
-                      placeholder="내 관종은..?" />
-                }
-              </Media>
+            {pageType != 'signup' && <>
+              {me
+                ? <Media queries={{small: "(max-width: 767px)"}}>
+                    {(matches) => matches.small
+                      ? <Row style={ userInfoStyle } onClick={ onUserForm }><ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'comment'} disabledClick={true}/></Row>
+                      : <Row style={ userInfoStyle } onClick={ onUserForm }>
+                          <Col><ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'comment'} disabledClick={true}/></Col>
+                          <Col style={ nicknameStyle }>{me.nickname}</Col>
+                        </Row>
+                    }
+                  </Media>
+                : <>
+                    <Link href="/signup" prefetch={false}><a style={ UpperMenuButtonStyle }>가입</a></Link>
+                    <a style={ UpperMenuButtonStyle } onClick={ onUserForm }>로그인</a>
+                  </>
+              }
+              </>}
           </Col>
 
           <Col xs={1} md={7}/>
@@ -182,42 +175,60 @@ const AppLayout = ({ children, pageType }) => {
         <Row>
           <Col xs={1} md={7}/>
 
-          <Col xs={11} md={5}>
-            {pageType === 'signup'
-              ? <></>
-              : <>
-                  {me
-                    ?  <Row style={ userInfoStyle } onClick={ onUserForm }>
-                        <Col>
-                          <ChewzooAvatar userId={me.id} userAvatar={me.avatar} avatarPosition={'comment'} disabledClick={true}/>
-                        </Col>
-                        <Col style={ nicknameStyle }>
-                            {me.nickname}
-                        </Col>
-                      </Row>
-                    : <Link href="/signup" prefetch={false}>
-                        <Button shape="round" style={ JoinButtonStyle }>
-                          가입
-                        </Button>
-                      </Link>
-                  }
-                </>
-            }
+          <Col xs={22} md={5}>
+            <Row>
+              <Popover placement="topLeft" content={
+                <Media queries={{small: "(max-width: 767px)"}}>
+                  {(matches) => matches.small
+                    ? <div style={{ width: '77vw'}}>
+                        <ChewzooSubMenu />
+                      </div>
+                    : <div style={{ width: '39vw'}}>
+                        <ChewzooSubMenu />
+                      </div>}
+                </Media>
+                } trigger="click">
+                <MenuOutlined style={ MenuIconStyle }/>
+              </Popover>
+              
+              <Media queries={{small: "(max-width: 767px)"}}>
+                {(matches) => matches.small
+                  ? <>
+                      {pageType === 'signup'
+                        ? <Button shape="round" type={'primary'} style={ WriterButtonStyle} onClick={ onSignUpSubmit } loading={signUpLoading}>
+                            <CheckOutlined />
+                          </Button>
+                        : <>
+                            {me && 
+                              <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
+                                <FormOutlined />
+                              </Button>
+                            }
+                          </>
+                      }
+                    </>
+                  : <Input.Search 
+                    value={ searchInput }
+                    onChange={ onChangeSearchInput }
+                    onSearch={ onSearch }
+                    style={ MenuSearchStyle } 
+                    enterButton
+                    placeholder="내 관종은..?" />
+                }
+              </Media>
+            </Row>
           </Col>
 
-          <Col xs={11} md={5}>
+          <Col xs={0} md={5}>
             {pageType === 'signup'
-              ? <Button type={'primary'} style={ WriterButtonStyle } onClick={ onSignUpSubmit } loading={signUpLoading}>
+              ? <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onSignUpSubmit } loading={signUpLoading}>
                   <CheckOutlined />
                 </Button>
               : <>
-                  {me
-                    ? <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
-                        글쓰기
-                      </Button>
-                    : <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onUserForm }>
-                        로그인
-                      </Button>
+                  {me && 
+                    <Button shape="round" type={'primary'} style={ WriterButtonStyle } onClick={ onPostForm }>
+                      <FormOutlined />
+                    </Button>
                   }
                 </>
             }
@@ -229,8 +240,7 @@ const AppLayout = ({ children, pageType }) => {
 
       {me ? <Profile /> : <LoginForm />}
       {me && <PostForm pageType={pageType}/>}
-
-      <ChewzooSubMenu />
+      
     </div>
   );
 };

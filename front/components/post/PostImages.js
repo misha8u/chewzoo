@@ -61,6 +61,7 @@ const PostImages = ({ images, postForm }) => {
       type: REMOVE_IMAGE,
       data: index,
     })
+    console.log(index)
   }, []);
 
   return (

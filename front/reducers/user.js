@@ -30,10 +30,11 @@ export const initialState = {
   changeNicknameError: null,
   showUserForm: null,
   showOtherProfile: false,
-  showChewzooSubMenu: false,
   showPostForm: false,
   showBranchPostForm: false,
+  showUpdatePostForm: false,
   branchPost: null,
+  updatePost: null,
   me: null,
   userInfo: null,
   signUpData: {},
@@ -88,11 +89,9 @@ export const SHOW_USER_FORM = 'SHOW_USER_FORM';
 export const CLOSE_USER_FORM = 'CLOSE_USER_FORM';
 export const SHOW_OTHER_PROFILE = 'SHOW_OTHER_PROFILE';
 
-export const SHOW_CHEWZOO_SUBMENU = 'SHOW_CHEWZOO_SUBMENU';
-export const CLOSE_CHEWZOO_SUBMENU = 'CLOSE_CHEWZOO_SUBMENU';
-
 export const SHOW_POSTFORM = 'SHOW_POSTFORM';
 export const SHOW_BRANCH_POSTFORM = 'SHOW_BRANCH_POSTFORM';
+export const SHOW_UPDATE_POSTFORM = 'SHOW_UPDATE_POSTFORM';
 export const CLOSE_POSTFORM = 'CLOSE_POSTFORM';
 
 export const SIGN_UP_SUBMIT_TRUE = 'SIGN_UP_SUBMIT_TRUE';
@@ -260,15 +259,13 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.changeAvatarLoading = false;
       draft.changeAvatarError = action.error;
       break;
-    case SHOW_CHEWZOO_SUBMENU:
-      draft.showChewzooSubMenu = true;
-      break;
-    case CLOSE_CHEWZOO_SUBMENU:
-      draft.showChewzooSubMenu = false;
-      break;
     case SHOW_BRANCH_POSTFORM:
       draft.showBranchPostForm = true;
       draft.branchPost = action.data;
+      break;
+    case SHOW_UPDATE_POSTFORM:
+      draft.showUpdatePostForm = true;
+      draft.updatePost = action.data;
       break;
     case SHOW_POSTFORM:
       draft.showPostForm = true;
@@ -276,7 +273,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case CLOSE_POSTFORM:
       draft.showPostForm = false;
       draft.showBranchPostForm = false;
+      draft.showUpdatePostForm = false;
       draft.branchPost = [];
+      draft.updatePost = [];
       break;
     case SIGN_UP_SUBMIT_TRUE:
       draft.signUpSubmit = true;

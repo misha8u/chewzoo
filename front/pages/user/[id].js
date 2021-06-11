@@ -82,10 +82,10 @@ const User = () => {
       {userInfo && (
         <Head>
           <title>
-            cHEWzOO | {userInfo.nickname}
+            츄주 | {userInfo.nickname}
           </title>
           <meta name="description" content={mainPosts[0] && mainPosts[0].content} />
-          <meta property="og:title" content={`cHEWzOO by ${userInfo.nickname}`} />
+          <meta property="og:title" content={`츄주 by ${userInfo.nickname}`} />
           <meta property="og:description" content={mainPosts[0] && mainPosts[0].content} />
           <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
         </Head>

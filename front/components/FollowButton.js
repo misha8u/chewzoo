@@ -32,8 +32,8 @@ const FollowButton = ({ otherUserId }) => {
   return (
     <>
       {isFollowing === 'object'
-        ? <Button onClick={ onClickButton } loading={ unfollowLoading } style={ bottomButtonStyle }>관심 끊기</Button>
-        : <Button onClick={ onClickButton } loading={ followLoading } style={ bottomButtonStyle } type='primary'>관심 갖기</Button>
+        ? <Button shape="round" onClick={ onClickButton } loading={ unfollowLoading } style={ bottomButtonStyle }>관심 끊기</Button>
+        : <Button shape="round" onClick={ onClickButton } loading={ followLoading } style={ bottomButtonStyle } type='primary'>관심 갖기</Button>
       }
     </>
   )

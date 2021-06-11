@@ -5,7 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Col, Row, Badge, message } from 'antd';
 import { QuestionCircleTwoTone, QuestionCircleOutlined, 
   ExclamationCircleTwoTone, ExclamationCircleOutlined, 
-  MessageOutlined, MessageFilled, BranchesOutlined,
+  MessageOutlined, MessageFilled, ApartmentOutlined,
   LinkOutlined, FileImageFilled, FileImageOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -194,7 +194,7 @@ const PostCardActionButtons = ({ post }) => {
                 offset={ badgePosition }
                 style={{ backgroundColor: '#262626', textAlign: 'center' }}
               >
-                <BranchesOutlined style={ ActionButtonIconStyle } key="branch"/>
+                <ApartmentOutlined style={ ActionButtonIconStyle } key="branch"/>
               </Badge>
             </div>
           }

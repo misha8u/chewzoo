@@ -17,6 +17,7 @@ import {
   OFF_QUESTION_REQUEST, OFF_QUESTION_SUCCESS, OFF_QUESTION_FAILURE,
   UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
   BRANCH_FAILURE, BRANCH_REQUEST, BRANCH_SUCCESS, RETURN_FOCUSCARD,
+  UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -252,6 +253,26 @@ function* removePost(action) {
   }
 }
 
+function updatePostAPI(data) {
+  return axios.patch(`/post/${data.PostId}`, data);
+}
+
+function* updatePost(action) {
+  try {
+    const result = yield call(updatePostAPI, action.data);
+    yield put({
+      type: UPDATE_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UPDATE_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function reportAPI(data) {
   return axios.post(`/post/${data.postId}/report`, data);
 }
@@ -388,6 +409,10 @@ function* watchRemoveComment() {
   yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
+function* watchUpdatePost() {
+  yield takeLatest(UPDATE_POST_REQUEST, updatePost);
+}
+
 function* watchReport() {
   yield takeLatest(REPORT_POST_REQUEST, report);
 }
@@ -422,6 +447,7 @@ export default function* postSaga() {
     fork(watchLoadHashtagPosts),
     fork(watchUploadImages),
     fork(watchRemovePost),
+    fork(watchUpdatePost),
     fork(watchReport),
     fork(watchAddComment),
     fork(watchRemoveComment),

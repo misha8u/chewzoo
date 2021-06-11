@@ -67,8 +67,8 @@ const LoginForm = () => {
       onOk={onSubmitForm} 
       onCancel={handleCancel}
       footer={[
-        <Button key="cancle" onClick={handleCancel}>닫기</Button>,
-        <Button type="primary" onClick={onSubmitForm} loading={logInLoading}>로그인</Button>
+        <Button shape="round" key="cancle" onClick={handleCancel}>닫기</Button>,
+        <Button shape="round" type="primary" onClick={onSubmitForm} loading={logInLoading}>로그인</Button>
       ]}
       >
       <Form style={{ padding: '0px' }}>

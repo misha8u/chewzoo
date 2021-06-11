@@ -96,11 +96,11 @@ const Home = () => {
 
   return (
     <AppLayout>
-        <Head>
-        <title>cHEWzOO</title>
-        <meta name="description" content={'츄주, 주식을 씹다! '} />
-        <meta property="og:title" content={'cHEWzOO'} />
-        <meta property="og:description" content={'츄주, 주식을 씹다!'} />
+      <Head>
+        <title>츄주 | 주식 커뮤니티</title>
+        <meta name="description" content={'주식에 대해 씹어볼 모든 이야기'} />
+        <meta property="og:title" content={'주식 커뮤니티, 츄주(cHEWzOO)'} />
+        <meta property="og:description" content={'주식에 대해 씹어볼 모든 이야기'} />
         <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
       </Head>
       <div style={ PostContainerStyle }>

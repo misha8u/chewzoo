@@ -4,7 +4,7 @@ import { AlertOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { REMOVE_POST_REQUEST, REPORT_POST_REQUEST } from '../../reducers/post';
-import { SHOW_USER_FORM } from '../../reducers/user';
+import { SHOW_USER_FORM, SHOW_UPDATE_POSTFORM } from '../../reducers/user';
 
 import useInput from '../../hooks/useInput';
 import ChewzooAvatar from '../ChewzooAvatar';
@@ -57,6 +57,20 @@ const PostCardAuthor = ({ post }) => {
       }
     })
   };
+
+  const onUpdatePostForm = useCallback(() => {
+    if (!id) {
+      const formType = String('login')
+      return dispatch({
+        type: SHOW_USER_FORM,
+        data: { formType }
+      });
+    }
+      return dispatch({
+        type: SHOW_UPDATE_POSTFORM,
+        data: post,
+      });
+  }, [id]);
 
   const [reportText, onChangeReportText, setReportText] = useInput('');
   const [reportContent, setReportContent] = useState(false);
@@ -169,11 +183,9 @@ const PostCardAuthor = ({ post }) => {
         {id && authorHover && <>
           {post.User.id === id
             ? <>
-                {/*
                 <EditOutlined key="edit"
-                  onClick={ removeConfirm }
+                  onClick={ onUpdatePostForm }
                   style={ authorButtonStyle }/>
-                */}
 
                 <DeleteOutlined ket="delete"
                   style={ authorButtonStyle }

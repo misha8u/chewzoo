@@ -88,10 +88,10 @@ const Hashtag = () => {
     <AppLayout>
       <Head>
           <title>
-            cHEWzOO | {tag}
+            츄주 | {tag}
           </title>
           <meta name="description" content={mainPosts[0] && mainPosts[0].content} />
-          <meta property="og:title" content={`cHEWzOO #${tag}`} />
+          <meta property="og:title" content={`츄주 #${tag}`} />
           <meta property="og:description" content={mainPosts[0] && mainPosts[0].content} />
           <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
       </Head>

@@ -68,10 +68,10 @@ const Post = () => {
         ? <>
             <Head>
               <title>
-                cHEWzOO | {singlePost.User.nickname}
+                츄주 | {singlePost.User.nickname}
               </title>
               <meta name="description" content={singlePost.content} />
-              <meta property="og:title" content={`cHEWzOO by ${singlePost.User.nickname}`} />
+              <meta property="og:title" content={`츄주 by ${singlePost.User.nickname}`} />
               <meta property="og:description" content={singlePost.content} />
               <meta property="og:image" content={`${backUrl}/resource/signupTitle.png`} />
               <meta property="og:url" content={`https://chewzoo.kr/post/${id}`} />
@@ -92,7 +92,7 @@ const Post = () => {
         : <>
             <Head>
               <title>
-                cHEWzOO | 여기는 어디?
+                츄주 | 여기는 어디?
               </title>
             </Head>
 

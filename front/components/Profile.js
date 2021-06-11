@@ -227,7 +227,7 @@ const Profile = () => {
             <Divider style={{ margin: '12px 0px 12px 0px' }}/>
 
             <Row>
-              <Button style={ bottomButtonStyle } onClick={ onLogout } loading={ logOutLoading }>로그아웃</Button>
+              <Button shape="round" style={ bottomButtonStyle } onClick={ onLogout } loading={ logOutLoading }>로그아웃</Button>
             </Row>
 
           </>
