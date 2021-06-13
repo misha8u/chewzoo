@@ -1,40 +1,35 @@
 import produce from '../util/produce';
 
 export const initialState = {
-  loadMyInfoLoading: false, // 내 정보 가겨오기 시도중
+  loadMyInfoLoading: false,
   loadMyInfoDone: false,
   loadMyInfoError: null,
-  loadUserLoading: false, // 유저 정보 가져오기 시도중
+  loadUserLoading: false,
   loadUserDone: false,
   loadUserError: null,
-  followLoading: false, // 팔로우 시도중
+  followLoading: false,
   followDone: false,
   followError: null,
-  unfollowLoading: false, // 언팔로우 시도중
+  unfollowLoading: false,
   unfollowDone: false,
   unfollowError: null,
   removeFollowerLoading: false,
   removeFollowerDone: false,
   removeFollowerError: null,
-  logInLoading: false, // 로그인 시도중
+  logInLoading: false,
   logInDone: false,
   logInError: null,
-  logOutLoading: false, // 로그아웃 시도중
+  logOutLoading: false,
   logOutDone: false,
   logOutError: null,
-  signUpLoading: false, // 회원가입 시도중
+  signUpLoading: false,
   signUpDone: false,
   signUpError: null,
-  changeNicknameLoading: false, // 닉네임 변경 시도중
+  changeNicknameLoading: false,
   changeNicknameDone: false,
   changeNicknameError: null,
   showUserForm: null,
   showOtherProfile: false,
-  showPostForm: false,
-  showBranchPostForm: false,
-  showUpdatePostForm: false,
-  branchPost: null,
-  updatePost: null,
   me: null,
   userInfo: null,
   signUpData: {},
@@ -88,11 +83,6 @@ export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 export const SHOW_USER_FORM = 'SHOW_USER_FORM';
 export const CLOSE_USER_FORM = 'CLOSE_USER_FORM';
 export const SHOW_OTHER_PROFILE = 'SHOW_OTHER_PROFILE';
-
-export const SHOW_POSTFORM = 'SHOW_POSTFORM';
-export const SHOW_BRANCH_POSTFORM = 'SHOW_BRANCH_POSTFORM';
-export const SHOW_UPDATE_POSTFORM = 'SHOW_UPDATE_POSTFORM';
-export const CLOSE_POSTFORM = 'CLOSE_POSTFORM';
 
 export const SIGN_UP_SUBMIT_TRUE = 'SIGN_UP_SUBMIT_TRUE';
 export const SIGN_UP_SUBMIT_FALSE = 'SIGN_UP_SUBMIT_FALSE';
@@ -259,24 +249,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.changeAvatarLoading = false;
       draft.changeAvatarError = action.error;
       break;
-    case SHOW_BRANCH_POSTFORM:
-      draft.showBranchPostForm = true;
-      draft.branchPost = action.data;
-      break;
-    case SHOW_UPDATE_POSTFORM:
-      draft.showUpdatePostForm = true;
-      draft.updatePost = action.data;
-      break;
-    case SHOW_POSTFORM:
-      draft.showPostForm = true;
-      break;
-    case CLOSE_POSTFORM:
-      draft.showPostForm = false;
-      draft.showBranchPostForm = false;
-      draft.showUpdatePostForm = false;
-      draft.branchPost = [];
-      draft.updatePost = [];
-      break;
     case SIGN_UP_SUBMIT_TRUE:
       draft.signUpSubmit = true;
       break;
@@ -286,23 +258,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_TO_ME:
       draft.me.Posts.unshift({ id: action.data });
       break;
-      // return {
-      //   ...state,
-      //   me: {
-      //     ...state.me,
-      //     Posts: [{ id: action.data }, ...state.me.Posts],
-      //   },
-      // };
     case REMOVE_POST_OF_ME:
       draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
       break;
-      // return {
-      //   ...state,
-      //   me: {
-      //     ...state.me,
-      //     Posts: state.me.Posts.filter((v) => v.id !== action.data),
-      //   },
-      // };
     default:
       break;
   }

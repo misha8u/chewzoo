@@ -8,9 +8,7 @@ import Router from 'next/router';
 import useInput from '../../hooks/useInput'
 import PostImages from '../post/PostImages';
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from '../../reducers/post';
-import { CLOSE_POSTFORM } from '../../reducers/user';
-
+import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, CLOSE_POSTFORM } from '../../reducers/post';
 
 const PostContentForm = ({pageType}) => {
   const [postText, onChangePostText, setPostText] = useInput('');

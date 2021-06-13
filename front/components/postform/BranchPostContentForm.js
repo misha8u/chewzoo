@@ -9,8 +9,7 @@ import useInput from '../../hooks/useInput'
 import PostImages from '../post/PostImages';
 import PostCardContent from '../post/PostCardContent';
 import { useSelector, useDispatch } from 'react-redux';
-import { BRANCH_REQUEST, UPLOAD_IMAGES_REQUEST } from '../../reducers/post';
-import { CLOSE_POSTFORM } from '../../reducers/user';
+import { BRANCH_REQUEST, UPLOAD_IMAGES_REQUEST, CLOSE_POSTFORM } from '../../reducers/post';
 
 
 const BranchPostContentForm = ({pageType}) => {
@@ -18,8 +17,8 @@ const BranchPostContentForm = ({pageType}) => {
   const [postText, onChangePostText, setPostText] = useInput('');
   const [Notification, setNotification] = useState(false);  
   const dispatch = useDispatch(); 
-  const { imagePaths, branchLoading, branchDone } = useSelector((state) => state.post);
-  const { branchPost, me } = useSelector((state) => state.user);
+  const { imagePaths, branchLoading, branchDone, branchPost } = useSelector((state) => state.post);
+  const { me } = useSelector((state) => state.user);
   const id = me && me.id;
 
   useEffect(() => {
@@ -185,9 +184,11 @@ const BranchPostContentForm = ({pageType}) => {
               <PostCardContent postData={branchPost.content}/>
             </Row>
 
-            {branchPost.Images && branchPost.Images.length > 0 && (
+            {branchPost.Images?.length > 0 && (
               <div style={ BranchPostCardImagesStyle }>
-                {branchPost.Images[0] && <PostImages images={branchPost.Images}/>}
+                {branchPost.Images[0] && 
+                  <PostImages images={ branchPost.Images }/>
+                }
               </div>
             )}
           </>

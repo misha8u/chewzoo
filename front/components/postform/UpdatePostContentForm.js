@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Form, Input, Button, Tooltip, Card, message } from 'antd';
+import { Form, Input, Button, Tooltip, message } from 'antd';
 import { CheckOutlined, FileImageOutlined, FundOutlined, 
   NotificationFilled, NotificationOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -7,25 +7,19 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import PostImages from '../post/PostImages';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from '../../reducers/post';
-import { CLOSE_POSTFORM } from '../../reducers/user';
-
+import { UPDATE_POST_REQUEST, UPLOAD_IMAGES_REQUEST, CLOSE_POSTFORM } from '../../reducers/post';
 
 const UpdatePostContentForm = ({pageType}) => {
-  const { updatePost, showUpdatePostForm } = useSelector((state) => state.user);
   const [updateText, setUpdateText] = useState('')
   const [Notification, setNotification] = useState(false);
   const dispatch = useDispatch();
-  const { imagePaths, updatePostLoading, updatePostDone } = useSelector((state) => state.post);
+  const { imagePaths, updatePostLoading, updatePostDone, updatePost, showUpdatePostForm } = useSelector((state) => state.post);
 
   useEffect(() => {
     if (showUpdatePostForm) {
       setUpdateText(updatePost.content)
     }
-    //if (updatePostDone || !showUpdatePostForm) {
-    //  setUpdateText('')
-    //}
-  }, [updatePostDone, showUpdatePostForm]);
+  }, [showUpdatePostForm]);
 
   const onChangeText = useCallback((e) => {
     setUpdateText(e.target.value);
@@ -146,14 +140,22 @@ const UpdatePostContentForm = ({pageType}) => {
           </Button>
           </Tooltip>
 
-          {updatePost.Images && updatePost.Images.length > 0 && (
-            <div style={ UpdatePostCardImagesStyle }>
-              {updatePost.Images[0] && <PostImages images={updatePost.Images} postForm={true}/>}
-            </div>
+          {imagePaths.length > 0 | updatePost.Images?.length > 0 && (
+            <>
+              {updatePost.Images?.length > 0
+                ? <div style={ UpdatePostCardImagesStyle }>
+                    <PostImages images={ updatePost.Images.concat(imagePaths) } postForm={true} />
+                  </div>
+                : <div style={ UpdatePostCardImagesStyle }>
+                    <PostImages images={ imagePaths } postForm={true} />
+                  </div>
+              }
+            </>
           )}
 
         </Form.Item>
       </Form>
+
     </>
   );
 };

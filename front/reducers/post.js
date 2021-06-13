@@ -50,24 +50,12 @@ export const initialState = {
   reportedPost: null,
   focusCardDone: false,
   focusCard: 0,
+  showPostForm: false,
+  showBranchPostForm: false,
+  showUpdatePostForm: false,
+  branchPost: null,
+  updatePost: null,
 };
-
-//export const generateDummyPost = (number) => Array(number).fill().map(() => ({
-//  id: shortId.generate(),
-//  User: {
-//    id: shortId.generate(),
-//    nickname: faker.name.findName(),
-//  },
-//  content: faker.lorem.paragraph(),
-//  Images: [...Array(Math.floor(Math.random() * 6))].map(() => ({src: faker.image.image()})),
-//  Comments: [...Array(Math.floor(Math.random() * 4))].map(() => ({
-//    User: {
-//      id: shortId.generate(),
-//      nickname: faker.name.findName(),
-//    },
-//    content: faker.lorem.sentence(),
-//  })),
-//}));
 
 export const BRANCH_REQUEST = 'BRANCH_REQUEST';
 export const BRANCH_SUCCESS = 'BRANCH_SUCCESS';
@@ -140,6 +128,11 @@ export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
 export const RETURN_FOCUSCARD = 'RETURN_FOCUS_CARD';
 export const RETURNED_FOCUSCARD = 'RETURNED_FOCUSCARD';
+
+export const SHOW_POSTFORM = 'SHOW_POSTFORM';
+export const SHOW_BRANCH_POSTFORM = 'SHOW_BRANCH_POSTFORM';
+export const SHOW_UPDATE_POSTFORM = 'SHOW_UPDATE_POSTFORM';
+export const CLOSE_POSTFORM = 'CLOSE_POSTFORM';
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
@@ -381,6 +374,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.updatePostLoading = false;
       draft.updatePostDone = true;
       draft.mainPosts.find((v) => v.id === action.data.PostId).content = action.data.content;
+      draft.imagePaths = [];
       break;
     case UPDATE_POST_FAILURE:
       draft.updatePostLoading = false;
@@ -416,6 +410,24 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_COMMENT_FAILURE:
       draft.addCommentLoading = false;
       draft.addCommentError = action.error;
+      break;
+    case SHOW_BRANCH_POSTFORM:
+      draft.showBranchPostForm = true;
+      draft.branchPost = action.data;
+      break;
+    case SHOW_UPDATE_POSTFORM:
+      draft.showUpdatePostForm = true;
+      draft.updatePost = action.data;
+      break;
+    case SHOW_POSTFORM:
+      draft.showPostForm = true;
+      break;
+    case CLOSE_POSTFORM:
+      draft.showPostForm = false;
+      draft.showBranchPostForm = false;
+      draft.showUpdatePostForm = false;
+      draft.branchPost = [];
+      draft.updatePost = [];
       break;
     default:
       break;

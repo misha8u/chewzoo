@@ -3,8 +3,8 @@ import { Col, Row, Modal, Radio, Input, Space, message } from 'antd';
 import { AlertOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { REMOVE_POST_REQUEST, REPORT_POST_REQUEST } from '../../reducers/post';
-import { SHOW_USER_FORM, SHOW_UPDATE_POSTFORM } from '../../reducers/user';
+import { REMOVE_POST_REQUEST, REPORT_POST_REQUEST, SHOW_UPDATE_POSTFORM } from '../../reducers/post';
+import { SHOW_USER_FORM } from '../../reducers/user';
 
 import useInput from '../../hooks/useInput';
 import ChewzooAvatar from '../ChewzooAvatar';
@@ -70,7 +70,7 @@ const PostCardAuthor = ({ post }) => {
         type: SHOW_UPDATE_POSTFORM,
         data: post,
       });
-  }, [id]);
+  }, [id, post]);
 
   const [reportText, onChangeReportText, setReportText] = useInput('');
   const [reportContent, setReportContent] = useState(false);

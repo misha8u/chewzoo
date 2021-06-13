@@ -9,9 +9,9 @@ import { QuestionCircleTwoTone, QuestionCircleOutlined,
   LinkOutlined, FileImageFilled, FileImageOutlined } from '@ant-design/icons';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { SHOW_USER_FORM, SHOW_BRANCH_POSTFORM } from '../../reducers/user';
+import { SHOW_USER_FORM } from '../../reducers/user';
 import { ON_EXCLAMATION_REQUEST, OFF_EXCLAMATION_REQUEST, 
-  ON_QUESTION_REQUEST, OFF_QUESTION_REQUEST} from '../../reducers/post';
+  ON_QUESTION_REQUEST, OFF_QUESTION_REQUEST, SHOW_BRANCH_POSTFORM } from '../../reducers/post';
 
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
@@ -118,6 +118,7 @@ const PostCardActionButtons = ({ post }) => {
 
   const ActionButtonIconStyle = {
     fontSize: '19px',
+    cursor: 'pointer'
   }
 
   const leftActionButtonStyle = {

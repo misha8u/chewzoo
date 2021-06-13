@@ -72,10 +72,10 @@ const PostCardContent = ({ postData, postId }) => {
   }
   
   return(
-    <div style={{whiteSpace: 'pre-wrap'}}>
+    <div style={{whiteSpace: 'pre-line'}}>
       {postData && postData.length > 350
         ? <>
-            <div style={{ position: 'relative'}}>
+            <div style={{ position: 'relative', wordBreak: 'break-all' }}>
               {!seeMoreOpened && <div style={moreContentStyle}/>}
               {!seeMoreOpened
                 ? postData.slice(0, 350)

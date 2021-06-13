@@ -78,22 +78,6 @@ const Home = () => {
     //background: '#FFFFFF',
   }
 
-  //const renderThumb = ({ style, ...props }) => {
-  //  const thumbStyle = {
-  //    borderRadius: 6,
-  //    backgroundColor: '#E13427'
-  //  };
-  //  return <div style={{ ...style, ...thumbStyle }} {...props} />;
-  //};
-
-  //const CustomScrollbars = props => (
-  //  <Scrollbars
-  //    renderThumbHorizontal={renderThumb}
-  //    renderThumbVertical={renderThumb}
-  //    {...props}
-  //  />
-  //);
-
   return (
     <AppLayout>
       <Head>

@@ -8,7 +8,8 @@ import { Col, Row, Input, Button, message, Popover } from 'antd';
 import { MenuOutlined, CheckOutlined, FormOutlined } from '@ant-design/icons'
 
 import { useSelector, useDispatch } from 'react-redux';
-import { SHOW_USER_FORM, SHOW_POSTFORM, SIGN_UP_SUBMIT_TRUE } from '../reducers/user';
+import { SHOW_USER_FORM, SIGN_UP_SUBMIT_TRUE } from '../reducers/user';
+import { SHOW_POSTFORM } from '../reducers/post';
 
 import useInput from '../hooks/useInput';
 import LoginForm from './LoginForm';

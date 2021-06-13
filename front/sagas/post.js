@@ -16,8 +16,8 @@ import {
   ON_QUESTION_REQUEST, ON_QUESTION_SUCCESS, ON_QUESTION_FAILURE,
   OFF_QUESTION_REQUEST, OFF_QUESTION_SUCCESS, OFF_QUESTION_FAILURE,
   UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
-  BRANCH_FAILURE, BRANCH_REQUEST, BRANCH_SUCCESS, RETURN_FOCUSCARD,
-  UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS,
+  SHOW_BRANCH_POSTFORM, BRANCH_FAILURE, BRANCH_REQUEST, BRANCH_SUCCESS, RETURN_FOCUSCARD,
+  SHOW_UPDATE_POSTFORM, UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -42,6 +42,26 @@ function* branch(action) {
       type: BRANCH_FAILURE,
       error: err.response.data,
     });
+  }
+}
+
+function* branchPostForm(action) {
+  try {
+    yield put({
+      data: action.data,
+    });
+  } catch (err) {
+      console.error(err);
+  }
+}
+
+function* updatePostForm(action) {
+  try {
+    yield put({
+      data: action.data,
+    });
+  } catch (err) {
+      console.error(err);
   }
 }
 
@@ -433,9 +453,19 @@ function* watchLoadHashtagPosts() {
   yield throttle(3000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 
+function* watchBranchPostForm() {
+  yield takeLatest(SHOW_BRANCH_POSTFORM, branchPostForm);
+}
+
+function* watchUpdatePostForm() {
+  yield takeLatest(SHOW_UPDATE_POSTFORM, updatePostForm);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchBranch),
+    fork(watchBranchPostForm),
+    fork(watchUpdatePostForm),
     fork(watchOnExclamation),
     fork(watchOffExclamation),
     fork(watchOnQuestion),

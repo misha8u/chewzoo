@@ -6,14 +6,14 @@ import TextLoop from "react-text-loop";
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 
-import { CLOSE_POSTFORM } from '../../reducers/user';
+import { CLOSE_POSTFORM } from '../../reducers/post';
 import BranchPostContentForm from './BranchPostContentForm'
 import PostContentForm from './PostContentForm'
 import UpdatePostContentForm from './UpdatePostContentForm'
 
 const PostForm = ({ pageType }) => {
   const dispatch = useDispatch();
-  const { showPostForm, showBranchPostForm, showUpdatePostForm } = useSelector((state) => state.user);
+  const { showPostForm, showBranchPostForm, showUpdatePostForm } = useSelector((state) => state.post);
 
   const onClose = useCallback(() => {
     dispatch({

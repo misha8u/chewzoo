@@ -12,7 +12,7 @@ import {
   LOAD_USER_FAILURE, LOAD_USER_REQUEST, LOAD_USER_SUCCESS,
   CHANGE_NICKNAME_REQUEST, CHANGE_NICKNAME_SUCCESS, CHANGE_NICKNAME_FAILURE,
   CHANGE_AVATAR_REQUEST, CHANGE_AVATAR_SUCCESS, CHANGE_AVATAR_FAILURE,
-  SHOW_BRANCH_POSTFORM, SHOW_USER_FORM, SHOW_OTHER_PROFILE,
+  SHOW_USER_FORM, SHOW_OTHER_PROFILE,
 } from '../reducers/user';
 
 function changeNicknameAPI(data) {
@@ -112,16 +112,6 @@ function* userForm(action) {
         data: action.data.formType,
       });
     }
-  } catch (err) {
-      console.error(err);
-  }
-}
-
-function* branchPost(action) {
-  try {
-    yield put({
-      data: action.data,
-    });
   } catch (err) {
       console.error(err);
   }
@@ -253,10 +243,6 @@ function* watchChangeAvatar() {
   yield takeLatest(CHANGE_AVATAR_REQUEST, changeAvatar);
 }
 
-function* watchBranchPost() {
-  yield takeLatest(SHOW_BRANCH_POSTFORM, branchPost);
-}
-
 function* watchLoadMyInfo() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
@@ -296,7 +282,6 @@ function* watchRemoveFollower() {
 export default function* userSaga() {
   yield all([
     fork(watchRemoveFollower),
-    fork(watchBranchPost),
     fork(watchLoadMyInfo),
     fork(watchLoadUser),
     fork(watchChangeNickname),
