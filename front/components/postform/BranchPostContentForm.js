@@ -13,9 +13,10 @@ import { BRANCH_REQUEST, UPLOAD_IMAGES_REQUEST, CLOSE_POSTFORM } from '../../red
 
 
 const BranchPostContentForm = ({pageType}) => {
-  const [branchFormOpened, setBranchFormOpened] = useState(false);
   const [postText, onChangePostText, setPostText] = useInput('');
-  const [Notification, setNotification] = useState(false);  
+  const [branchFormOpened, setBranchFormOpened] = useState(false);
+  const [Notification, setNotification] = useState(false);
+  const [privewedImage, setPreviewedImage] = useState(imagePaths);
   const dispatch = useDispatch(); 
   const { imagePaths, branchLoading, branchDone, branchPost } = useSelector((state) => state.post);
   const { me } = useSelector((state) => state.user);
@@ -24,8 +25,9 @@ const BranchPostContentForm = ({pageType}) => {
   useEffect(() => {
     if (branchDone) {
       setPostText('')
-    }
-  }, [branchDone]);
+    };
+    setPreviewedImage(imagePaths);
+  }, [branchDone, imagePaths]);
 
   const onClose = useCallback(() => {
     dispatch({
@@ -116,7 +118,7 @@ const BranchPostContentForm = ({pageType}) => {
   return(
     <>
       <Form
-        encType="multipart/form-data" 
+        encType="multipart/form-data"
         onFinish={onSubmitForm}>
         <Form.Item>
           <Input.TextArea maxLength={5000} 
@@ -159,8 +161,8 @@ const BranchPostContentForm = ({pageType}) => {
           </Tooltip>
 
           {imagePaths.length > 0 &&
-            <Card.Grid style={ BranchPostCardImagesStyle }>
-              <PostImages images={imagePaths} postForm={true}/>
+            <Card.Grid style={ BranchPostCardImagesStyle } hoverable={false}>
+              <PostImages images={ privewedImage } postForm={true}/>
             </Card.Grid>
           }
         </Form.Item>

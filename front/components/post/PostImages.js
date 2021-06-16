@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Image, Space, Col, Row, Carousel, Tooltip } from 'antd';
 import { ZoomInOutlined, DeleteOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
@@ -10,39 +10,22 @@ const PostImages = ({ images, postForm }) => {
   const dispatch = useDispatch();
   const imageCarousel = useRef();
   const [currentPage, setCurrentPage] = useState(0);
+  const [imageBox, setImageBox] = useState(null);
+  const [carouselSetting, setCarouselSetting] = useState(null);
   const isProduction = backUrl === 'http://localhost:3065' ? false : true;
 
-  const imgPreview = {
-    maskClassName: 'customize-mask',
-    mask: (
-      <Space direction="vertical" align="center">
-        <ZoomInOutlined />
-      </Space>
-    ),
-  };
-
-  const visibleCarouselSetting = () => {
-    const c = (images.length > 3)
-    return c
-      ? {infinite: false, slidesToShow: 4, slidesToScroll: 4,}
-      : {infinite: false, slidesToShow: `${images.length % 4}`, dots: false }
-  }
-  const [carouselSetting] = useState(visibleCarouselSetting());
-
-  const visibleImageBox  = () => {
-    const c = (images.length > 3)
-    return c
-      ? {padding: '2.5px'}
-      : {padding: '2.5px', width: `${100 / images.lenghs}%`}
-  }
-  const [imageBox] = useState(visibleImageBox());
-
-  const sideButtonStyle = {
-    display: 'flex',
-    width: '14px',
-    alignItems: 'center',
-    margin: '0px 3px 0px 3px'
-  };
+  useEffect(() => {
+    if (images.length > 1) {
+      setImageBox({padding: '2.5px', width: `${100 / images.lenghs}%`})
+    } else {
+      setImageBox({padding: '2.5px'})
+    }
+    if (images.length > 3) {
+      setCarouselSetting({infinite: false, slidesToShow: 4, slidesToScroll: 4,})
+    } else {
+      setCarouselSetting({infinite: false, slidesToShow: `${images.length % 4}`, dots: false })
+    }
+  }, [images]);
 
   const handlePrev = () => {
     if(images.length > 4 && currentPage > 0) {
@@ -61,8 +44,23 @@ const PostImages = ({ images, postForm }) => {
       type: REMOVE_IMAGE,
       data: index,
     })
-    console.log(index)
   }, []);
+
+  const imgPreview = {
+    maskClassName: 'customize-mask',
+    mask: (
+      <Space direction="vertical" align="center">
+        <ZoomInOutlined />
+      </Space>
+    ),
+  };  
+
+  const sideButtonStyle = {
+    display: 'flex',
+    width: '14px',
+    alignItems: 'center',
+    margin: '0px 3px 0px 3px'
+  };
 
   return (
     <Row style={{ position: 'relative' }} key='images'>
@@ -83,9 +81,9 @@ const PostImages = ({ images, postForm }) => {
                   src={isProduction 
                     ? typeof(v) === 'object' ? `${v.src}` : `${v}`
                     : typeof(v) === 'object' ? `${backUrl}/${v.src}` : `${backUrl}/${v}`}
-                  alt={v}
-                  style={imageBox}
-                  preview={imgPreview}
+                  alt={String(v)}
+                  style={ imageBox }
+                  preview={ imgPreview }
                 />
               </Tooltip>
             ))}

@@ -54,7 +54,7 @@ const PostCardContent = ({ postData, postId }) => {
 
   const moreStyle = {
     position: 'relative',
-    margin: '0px',
+    margin: '10px 0px 0px 0px',
     padding: '0px',
     color: '0px',
     color: '#E13427',

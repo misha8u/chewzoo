@@ -15,12 +15,14 @@ const PostContentForm = ({pageType}) => {
   const [Notification, setNotification] = useState(false);
   const dispatch = useDispatch();
   const { imagePaths, addPostLoading, addPostDone } = useSelector((state) => state.post);
+  const [privewedImage, setPreviewedImage] = useState(imagePaths);
 
   useEffect(() => {
     if (addPostDone) {
       setPostText('')
-    }
-  }, [addPostDone]);
+    };
+    setPreviewedImage(imagePaths);
+  }, [addPostDone, imagePaths]);
 
   const onClose = useCallback(() => {
     dispatch({
@@ -97,7 +99,7 @@ const PostContentForm = ({pageType}) => {
   return(
     <>
       <Form
-        encType="multipart/form-data" 
+        encType="multipart/form-data"
         onFinish={onSubmitForm}>
         <Form.Item>
 
@@ -142,9 +144,9 @@ const PostContentForm = ({pageType}) => {
           </Tooltip>
 
             {imagePaths.length > 0 &&
-              <div style={ PostCardImagesStyle }>
-                <PostImages images={ imagePaths } postForm={true}/>
-              </div>
+              <Card.Grid style={ PostCardImagesStyle } hoverable={false}>
+                <PostImages images={ privewedImage } postForm={true}/>
+              </Card.Grid>
           }
         </Form.Item>
       </Form>

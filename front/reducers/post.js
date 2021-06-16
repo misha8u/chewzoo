@@ -55,6 +55,7 @@ export const initialState = {
   showUpdatePostForm: false,
   branchPost: null,
   updatePost: null,
+  updateImageInitiaion: true,
 };
 
 export const BRANCH_REQUEST = 'BRANCH_REQUEST';
@@ -65,6 +66,7 @@ export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+export const UPDATING_IMAGE = 'UPDATING_IMAGE';
 
 export const ON_EXCLAMATION_REQUEST = 'ON_EXCLAMATION_REQUEST';
 export const ON_EXCLAMATION_SUCCESS = 'ON_EXCLAMATION_SUCCESS';
@@ -175,9 +177,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UPLOAD_IMAGES_FAILURE:
       draft.uploadImagesLoading = false;
       draft.uploadImagesError = action.error;
-      break;
+      break;n
     case REMOVE_IMAGE:
-      draft.imagePaths = draft.imagePaths.filter((i) =>  i !== action.data);
+      draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      break;
+    case UPDATING_IMAGE:
+      draft.imagePaths = action.data
       break;
     case OFF_EXCLAMATION_REQUEST:
       draft.offExclamationLoading = true;
@@ -428,6 +433,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.showUpdatePostForm = false;
       draft.branchPost = [];
       draft.updatePost = [];
+      draft.imagePaths = [];
       break;
     default:
       break;
