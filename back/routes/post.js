@@ -303,25 +303,67 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.patch('/:postId', isLoggedIn, async (req, res, next) => { // PATCH /post/10
-  const hashtags = req.body.content.match(/#[^\s#]+/g);
+router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => { // PATCH /post/10
   try {
-    await Post.update({
-      content: req.body.content
-    }, {
-      where: {
-        id: req.params.postId,
-        UserId: req.user.id,
-      },
-    });
-    const post = await Post.findOne({ where: { id: req.params.postId }});
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
+    const post = await Post.findOne({ where: { id: req.body.PostId }});
     if (hashtags) {
       const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
         where: { name: tag.slice(1).toLowerCase() },
       })));
       await post.setHashtags(result.map((v) => v[0]));
     }
-    res.status(200).json({ PostId: parseInt(req.params.postId, 10), content: req.body.content });
+
+    if (req.body.image) {
+      const existingImages = await Image.findAll({ where: { PostId: req.body.PostId }});
+      if (existingImages?.length > 0) {
+        const existingImagesIds = existingImages.map(e => e?.id); 
+        const updatedImagesIds = req.body.image.map(e => e.id);
+        const savingImagesIds = existingImagesIds.filter(e => updatedImagesIds.includes(e));
+        const removingImages = existingImages.filter(x => !savingImagesIds.includes(x.id));
+
+        if (removingImages?.length > 0) {
+          await post.removeImages(removingImages.map((v) => v.id))
+        }
+      }
+
+      if (Array.isArray(req.body.image)) {
+        const images = await Promise.all(req.body.image.map((i) => {
+          if (typeof(i) === 'string') {
+            return(
+              Image.create({ src: i })
+            )
+          }
+        }))
+        if (images?.length > 0) {
+          await post.addImages(images);
+        }
+      } else {
+        if (typeof(req.body.image) === 'string') {
+          const image = await Image.create({ src: req.body.image })
+          await post.addImages(image);
+        }
+      }
+    }
+
+    await Post.update({
+      content: req.body.content,
+      image: req.body.image,
+    }, {
+      where: {
+        id: req.params.postId,
+        UserId: req.user.id,
+      },
+    });
+
+    const updatedPost = await Post.findOne({
+      where: { id: post.id },
+      include: [{
+        model: Image,
+      }]
+    })
+    res.status(201).json(updatedPost);
+
   } catch (error) {
     console.error(error);
     next(error);

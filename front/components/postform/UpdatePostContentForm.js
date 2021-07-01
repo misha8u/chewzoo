@@ -30,13 +30,10 @@ const UpdatePostContentForm = ({pageType}) => {
         )
       }
     }
-
     if (!updatePost.id) {
       setInitiation(true)
     }
-
     setPreviewedImage(imagePaths)
-    console.log(imagePaths)
   }, [showUpdatePostForm, imagePaths, updatePost, initiation]);
 
   const onChangeText = useCallback((e) => {
@@ -162,10 +159,13 @@ const UpdatePostContentForm = ({pageType}) => {
           </Button>
           </Tooltip>
 
-          {imagePaths.length > 0 | updatePost.Images?.length > 0 &&
-            <Card.Grid style={ UpdatePostCardImagesStyle } hoverable={false}>
-              <PostImages images={ privewedImage } postForm={true}/>
-            </Card.Grid>
+          {imagePaths.length > 0 | updatePost.Images?.length > 0
+            ? <>
+                <Card.Grid style={ UpdatePostCardImagesStyle } hoverable={false}>
+                  <PostImages images={ privewedImage } postForm={true}/>
+                </Card.Grid>
+              </>
+            : <></>
           }
 
         </Form.Item>
