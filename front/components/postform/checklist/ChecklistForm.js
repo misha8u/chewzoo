@@ -145,7 +145,7 @@ const ChecklistForm = () => {
     if (basicInfoCode.substr(0,3) === 'SEE') {
       setParrotProbability(parrotProbability + s)
     }
-    setParrotText(t + ' #'  + codeName + ', ' + parrotText);
+    setParrotText(t + ' #'  + codeName + ' , ' + parrotText);
   }, [basicInfoCode, codeName, parrotProbability, parrotText]);
 
   const onSixthQuestion = useCallback((e, t, y, l, s) => () => {
