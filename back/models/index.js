@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const comment = require('./comment');
+const parrot = require('./parrot');
 const report = require('./report');
 const hashtag = require('./hashtag');
 const image = require('./image');
@@ -13,6 +14,7 @@ const db = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 db.Comment = comment;
+db.Parrot = parrot;
 db.Report = report;
 db.Hashtag = hashtag;
 db.Image = image;

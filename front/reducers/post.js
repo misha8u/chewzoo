@@ -102,6 +102,7 @@ export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POSTDONE_RESET = 'ADD_POSTDONE_RESET';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
@@ -334,6 +335,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addPostDone = true;
       draft.mainPosts.unshift(action.data);
       draft.imagePaths = [];
+      break;
+    case ADD_POSTDONE_RESET:
+      draft.addPostDone = false;
       break;
     case ADD_POST_FAILURE:
       draft.addPostLoading = false;

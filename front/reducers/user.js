@@ -35,6 +35,7 @@ export const initialState = {
   signUpData: {},
   loginData: {},
   signUpSubmit: false,
+  addedPostId: 0
 };
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
@@ -257,6 +258,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case ADD_POST_TO_ME:
       draft.me.Posts.unshift({ id: action.data });
+      draft.addedPostId = String(action.data);
       break;
     case REMOVE_POST_OF_ME:
       draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);

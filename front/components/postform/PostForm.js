@@ -10,6 +10,7 @@ import { CLOSE_POSTFORM } from '../../reducers/post';
 import BranchPostContentForm from './BranchPostContentForm'
 import PostContentForm from './PostContentForm'
 import UpdatePostContentForm from './UpdatePostContentForm'
+import ChecklistForm from './checklist/ChecklistForm'
 
 const PostForm = ({ pageType }) => {
   const dispatch = useDispatch();
@@ -45,6 +46,8 @@ const PostForm = ({ pageType }) => {
       </TextLoop>
 
       <Divider style={{ margin: '12px 0px 12px 0px' }}/>
+
+      <ChecklistForm />
 
       {showPostForm && <PostContentForm pageType={ pageType }/>}
       {showBranchPostForm && <BranchPostContentForm pageType={ pageType }/>}

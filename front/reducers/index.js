@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 
 import user from './user';
 import post from './post';
+import checklist from './checklist';
 
 // (이전상태, 액션) => 다음상태
 const rootReducer = (state, action) => {
@@ -13,6 +14,7 @@ const rootReducer = (state, action) => {
       const combinedReducer = combineReducers({
         user,
         post,
+        checklist,
       });
       return combinedReducer(state, action);
     }

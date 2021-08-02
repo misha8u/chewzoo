@@ -5,7 +5,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 
-const { Post, Image, Comment, Report, User, Hashtag } = require('../models');
+const { Post, Image, Comment, Report, User, Hashtag, Parrot } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -426,6 +426,53 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
       content: req.body.content,
       PostId: parseInt(req.params.postId, 10),
       UserId: req.user.id,
+    })
+    const fullComment = await Comment.findOne({
+      where: { id: comment.id },
+      include: [{
+        model: User,
+        attributes: ['id', 'nickname', 'avatar'],
+      }],
+    })
+    res.status(201).json(fullComment);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/:postId/parrot', isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
+    if (!post) {
+      return res.status(403).send('껄무새는 어디에?');
+    }
+    if (hashtags) {
+      const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+        where: { name: tag.slice(1).toLowerCase() },
+      })));
+      await post.addHashtags(result.map((v) => v[0]));
+    }
+    const parrotUser = await User.findOne({
+      where: { email: 'parrot@parrot.com' },
+      attributes: {
+        exclude: ['password', 'nickname', 'avatar', 'email', 'createdAt', 'updatedAt']
+      }
+    })
+
+    const comment = await Comment.create({
+      content: req.body.content,
+      PostId: parseInt(req.params.postId, 10),
+      UserId: parseInt(parrotUser.id, 10),
+    })
+    const parrot = await Parrot.create({
+      content: req.body.content,
+      infocode: req.body.infocode,
+      codename: req.body.codename,
+      probability: parseInt(req.body.probability, 10),
     })
     const fullComment = await Comment.findOne({
       where: { id: comment.id },

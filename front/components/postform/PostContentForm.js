@@ -8,18 +8,22 @@ import Router from 'next/router';
 import useInput from '../../hooks/useInput'
 import PostImages from '../post/PostImages';
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, CLOSE_POSTFORM } from '../../reducers/post';
+import { ADD_POST_REQUEST, ADD_POSTDONE_RESET, UPLOAD_IMAGES_REQUEST, CLOSE_POSTFORM } from '../../reducers/post';
 
 const PostContentForm = ({pageType}) => {
-  const [postText, onChangePostText, setPostText] = useInput('');
-  const [Notification, setNotification] = useState(false);
   const dispatch = useDispatch();
   const { imagePaths, addPostLoading, addPostDone } = useSelector((state) => state.post);
+  const { openedChecklist } = useSelector((state) => state.checklist);
+  const [postText, onChangePostText, setPostText] = useInput('');
+  const [Notification, setNotification] = useState(false);
   const [privewedImage, setPreviewedImage] = useState(imagePaths);
 
   useEffect(() => {
     if (addPostDone) {
-      setPostText('')
+      setPostText(''),
+      dispatch({
+        type: ADD_POSTDONE_RESET
+      });
     };
     setPreviewedImage(imagePaths);
   }, [addPostDone, imagePaths]);
@@ -37,7 +41,7 @@ const PostContentForm = ({pageType}) => {
   const onSubmitForm = useCallback(() => {
     if (!postText || !postText.trim()) {
       return message.error({content: '쓸 거 없어?', style: {marginTop: '3vh'}});
-    }    
+    }
     const formData = new FormData();
     imagePaths.forEach((p) => {
       formData.append('image', p);
@@ -97,7 +101,7 @@ const PostContentForm = ({pageType}) => {
   };
   
   return(
-    <>
+    <> {!openedChecklist &&
       <Form
         encType="multipart/form-data"
         onFinish={onSubmitForm}>
@@ -150,7 +154,7 @@ const PostContentForm = ({pageType}) => {
           }
         </Form.Item>
       </Form>
-    </>
+    }</>
   );
 };
 

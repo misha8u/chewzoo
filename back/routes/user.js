@@ -3,10 +3,24 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { Op } = require('sequelize');
 
-const { User, Post, Comment, Report, Image } = require('../models');
+const { User, Post, Comment, Report, Image, Parrot } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
+
+try {
+  User.findOrCreate({
+    where: { email: 'parrot@parrot.com' },
+    defaults : {
+      email: 'parrot@parrot.com',
+      nickname: '껄무새',
+      password: 'p#1kd@!zx',
+      avatar: String('avatars/parrot0.png')
+    }
+  });
+} catch (error) {
+  console.error(error);
+}
 
 router.get('/', async (req, res, next) => { // GET /user
   try {
