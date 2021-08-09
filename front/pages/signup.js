@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import { Row, Checkbox, Form, Input, Col, Divider, message  } from 'antd';
+import { Row, Checkbox, Form, Input, Col, Divider, message, Button  } from 'antd';
 
 import Router from 'next/router';
 import Head from 'next/head';
@@ -12,12 +12,14 @@ import { SIGN_UP_REQUEST, LOAD_MY_INFO_REQUEST, SIGN_UP_SUBMIT_FALSE } from '../
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 import wrapper from '../store/configureStore';
+import Modal from 'antd/lib/modal/Modal';
 
 const Signup = () => {
   const [privacyTerm, setPrivacyTerm] = useState(false);
   const [serviceTerm, setServiceTerm] = useState(false);
   const [privacyTermError, setPrivacyTermError] = useState(false);
   const [serviceTermError, setServiceTermError] = useState(false);
+  const [tutoPage, setTutoPage] = useState(0);
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -36,11 +38,9 @@ const Signup = () => {
   useEffect(() => {
     if (me && me.id) {
       message.error({content: '이미 가입된 회원입니다.', style: {marginTop: '3vh'}})
-      Router.replace('/');
     }
     if (signUpDone) {
-      message.success({content: 'cHEWzOO에 온걸 환영해!', style: {marginTop: '3vh'}})
-      Router.replace('/');
+      setTutoPage(1)
     }
     if (signUpSubmit) {
       onSubmit()
@@ -93,6 +93,16 @@ const Signup = () => {
       },
     });
   }, [email, password, passwordCheck, privacyTerm, serviceTerm, nickname]);
+
+  const onTutoPage = useCallback(() => {
+    if (tutoPage > 2) {
+      setTutoPage(0);
+      message.success({content: 'cHEWzOO에 온걸 환영해!', style: {marginTop: '3vh'}});
+      Router.replace('/');
+    } else {
+      setTutoPage(tutoPage + 1);
+    }
+  }, [tutoPage])
 
   const onChangePrivacyTerm = useCallback((e) => {
     setPrivacyTerm(e.target.checked);
@@ -203,7 +213,7 @@ const Signup = () => {
                   🧑‍🤝‍🧑 회원 가입과 개인정보 취급 방침, 서비스 운영 정책을 제외한 cHEWzOO(츄주)의 대부분의 메세지는 반말입니다.
                 </span><br />
                 <span>
-                  🗣️ 이 서비스는 사용자(회원)에게 반말하지만, 여러분은 서로 예의를 갖춰 존대하길 권장합니다.
+                  🗣️ 모든 사용자(회원) 사이에는 예의와 선을 지키는 반말을 권장합니다.
                 </span><br />
                 <span>
                   🐷 녹색 돼지 자낳괴와 분홍 쥐돌이 떡상이, 파랑 쥐돌이 떡락이는 cHEWzOO(츄주)의 대표 캐릭터입니다.
@@ -229,6 +239,61 @@ const Signup = () => {
 
       <Col xs={2} md={7} />
       </div>
+
+      <Modal
+        closable={ false }
+        footer={ null }
+        visible={ signUpDone && tutoPage > 0 }
+        bodyStyle={{ padding: '10px', textAlign: 'center' }}
+        width={340}
+      >
+        {tutoPage === 1 &&
+          <div>
+            <img role="tuto1" alt="tuto1" src ={`${backUrl}/resource/tuto1.png`}/>
+            <Divider style={{ margin: '12px 0px 0px 0px' }}/>
+            <br />
+            <span>로그인 하고, 화면 우측 하단의</span>
+            <br />
+            <span>"글쓰기 버튼"을 눌러줘</span>
+            <Button shape="round" type="dashed"
+              style={{ width: '80%', margin: '20px 8px 0px 8px'  }} onClick={ onTutoPage }
+            >
+              ㅇㅇ 뭐라도 써볼게✏
+            </Button>
+          </div>
+        }
+        {tutoPage === 2 &&
+          <div>
+            <img role="tuto2" alt="tuto2" src ={`${backUrl}/resource/tuto2.png`}/>
+            <Divider style={{ margin: '12px 0px 0px 0px' }}/>
+            <br />
+            <span>그럼, 껄무새에게 살지 팔지 물어보거나,</span>
+            <br />
+            <span>#해시태그로 관심 종목을 태그할 수 있어~</span>
+            <Button shape="round" type="dashed"
+              style={{ width: '80%', margin: '20px 8px 0px 8px'  }} onClick={ onTutoPage }
+            >
+              오! 껄무새의 대답이 궁금해!🦜
+            </Button>
+          </div>
+        }
+        {tutoPage === 3 &&
+          <div>
+            <img role="tuto3" alt="tuto3" src ={`${backUrl}/resource/tuto3.png`}/>
+            <Divider style={{ margin: '12px 0px 0px 0px' }}/>
+            <br />
+            <span>게시물에 댓글💬을 달거나</span>
+            <br />
+            <span>신뢰해❗와 의심해❓ 버튼으로 소통할 수 있어!</span>
+            <Button shape="round" type="dashed"
+              style={{ width: '80%', margin: '20px 8px 0px 8px'  }} onClick={ onTutoPage }
+            >
+              어서 즐겨보고파!!
+            </Button>
+          </div>
+        }
+      </Modal>
+
     </AppLayout>
   );
 };

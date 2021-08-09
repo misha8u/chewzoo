@@ -277,7 +277,7 @@ const ChecklistForm = () => {
                       {/* 순서 대로 BUY SEL SEE 의 경우 */}
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BDN', '급하게 하락한', 5, 10, 5) }>급한 하락!</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('SDN', '천천히 하락한', 15, -5, -5) }>천천히 하락..</Button>
-                      <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BOX', '1% 대 횡보 중인', 10, -8, 5) }>-1% ~ +1%</Button>
+                      <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BOX', '횡보 중인', 10, -8, 5) }>-1% ~ +1%</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('SUP', '약하게 상승한', -5, -10, 10) }>약한 상승!</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BUP', '급하게 상승한', -8, -15, 8) }>급하고 강한 상승!!</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('NNN', '최근 추세를 모르는', 10, 10, 10) }>몰라..</Button>
@@ -285,7 +285,7 @@ const ChecklistForm = () => {
                     :<>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BDN', '급하게 하락한', -5, 8, 10) }>고점 대비 50% 이상 하락</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('SDN', '천천히 하락한', -10, 12, 7) }>고점 대비 20% 이상 하락</Button>
-                      <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BOX', '1% 대 횡보 중인', -5, 17, 5) }>10% 이내의 박스권</Button>
+                      <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BOX', '횡보 중인', -5, 17, 5) }>10% 이내의 박스권</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('SUP', '약하게 상승한', 5, -10, 7) }>저점 대비 50% 이상 상승</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('BUP', '급하게 상승한', 10, -20, 10) }>저점 대비 100% 이상 상승</Button>
                       <Button style={{ margin: '2px' }} onClick={ onFifthQuestion('NNN', '최근 추세를 모르는', 10, 10, 10) }>몰라..</Button>
@@ -331,8 +331,8 @@ const ChecklistForm = () => {
                         :<>
                           {basicInfoCode.substr(12,3) === 'BOX'
                             ?<>
-                              <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('IND', '지수가 횡보해서', -3, 1, 4 ) }>지수 횡보</Button>
-                              <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('GRO', '산업군 / 테마가 횡보해서', -5, 5, 2 ) }>산업군 / 테마 횡보</Button>
+                              <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('IND', '지수 때문에', -3, 1, 4 ) }>지수 횡보</Button>
+                              <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('GRO', '산업군 / 테마 때문에', -5, 5, 2 ) }>산업군 / 테마 횡보</Button>
                               <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('VAL', '급등락 후, 조정 중이라서', 0, -4, -6 ) }>급등락 후, 조정</Button>
                               <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('MOM', '무관심과 소외 때문에', -7, 7, 5 ) }>무관심과 소외</Button>
                               <Button style={{ margin: '2px' }} onClick={ onSixthQuestion('TRI', '세력이 작업 중이라', 5, 5, 0 ) }>세력 작업 중</Button>

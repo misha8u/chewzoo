@@ -56,7 +56,7 @@ const ChewzooSubMenu = () => {
       </Link>
       <Divider style={{ margin: '12px 0px 12px 0px' }}/>
 
-      <span>알파 1.2.1</span>
+      <span>알파 1.2.2</span>
     </>
   );
 };

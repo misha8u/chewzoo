@@ -9,10 +9,11 @@ import wrapper from '../store/configureStore';
 const cHEWzOO = ({ Component }) => (
   <>
     <Head>
-      <title>츄주 | 주식 커뮤니티</title>
+      <title>츄주 | 요즘 갬성 주식</title>
       {process.env.NODE_ENV === 'production' && <script data-ad-client="ca-pub-9319397510907127" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>}
     </Head>
     <Component />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
   </>
 );
 

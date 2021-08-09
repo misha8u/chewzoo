@@ -81,7 +81,7 @@ const Home = () => {
   return (
     <AppLayout>
       <Head>
-        <title>츄주 | 주식 커뮤니티</title>
+        <title>츄주 | 요즘 갬성 주식</title>
         <meta name="description" content={'주식에 대해 씹어볼 모든 이야기'} />
         <meta property="og:title" content={'주식 커뮤니티, 츄주(cHEWzOO)'} />
         <meta property="og:description" content={'주식에 대해 씹어볼 모든 이야기'} />
